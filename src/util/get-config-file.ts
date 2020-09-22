@@ -1,37 +1,27 @@
 import { Octokit } from "@octokit/core";
 import yaml from "js-yaml";
 
-import type { Configuration } from "./types";
+import type { Configuration, File } from "../types";
 
-type GetOptions = {
+type Options = {
   owner: string;
   repo: string;
   path: string;
 };
 
-type Config<T> = {
-  config: T | null;
-};
-
-type Extends = {
-  _extends?: string;
-};
-
 /**
- * Load configuration for a given repository and path. If the file does not exist,
- * it loads the configuration from the same file in the `.github` repository by the
- * same owner.
+ * Load configuration from a given repository and path.
  *
  * @param octokit Octokit instance
  * @param options
  */
-export async function getConfig<T>(
+export async function getConfigFile<T>(
   octokit: Octokit,
-  { owner, repo, path }: GetOptions
-): Promise<Config<T>> {
+  { owner, repo, path }: Options
+): Promise<File> {
   try {
     // https://docs.github.com/en/rest/reference/repos#get-repository-content
-    const { data, headers } = await octokit.request(
+    const requestOptions = await octokit.request.endpoint(
       "GET /repos/{owner}/{repo}/contents/{path}",
       {
         owner,
@@ -42,6 +32,7 @@ export async function getConfig<T>(
         },
       }
     );
+    const { data, headers } = await octokit.request(requestOptions);
 
     // If path is a submodule, or a folder, then a JSON string is returned with
     // the "Content-Type" header set to "application/json; charset=utf-8".
@@ -52,40 +43,32 @@ export async function getConfig<T>(
     // symlinks just return the content of the linked file when requesting the raw formt,
     // so we are fine
     if (headers["content-type"] === "application/json; charset=utf-8") {
+      octokit.log.warn(
+        `[@probot/octokit-plugin-config] ${requestOptions.url} exists, but is either a directory or a submodule. Ignoring.`
+      );
+
       return {
+        owner,
+        repo,
+        path,
         config: null,
       };
     }
 
-    const config = ((yaml.safeLoad(data) as unknown) as T & Extends) || null;
-
-    if (!config || !config._extends) {
-      return { config };
-    }
-
-    const { config: configExtension } = await getConfig(octokit, {
-      owner,
-      repo: config._extends,
-      path,
-    });
-
-    delete config._extends;
     return {
-      config: Object.assign(configExtension, config),
+      owner,
+      repo,
+      path,
+      config: ((yaml.safeLoad(data) || {}) as unknown) as Configuration,
     };
   } catch (error) {
     if (error.status === 404) {
-      if (repo === ".github") {
-        return {
-          config: null,
-        };
-      }
-
-      return getConfig(octokit, {
+      return {
         owner,
-        repo: ".github",
+        repo,
         path,
-      });
+        config: null,
+      };
     }
 
     throw error;
