@@ -80,8 +80,6 @@ const { config } = await octokit.config.get({
   },
   path: "",
   branch: "develop",
-  // See https://github.com/tehshrike/deepmerge#options
-  deepmerge: {},
 });
 ```
 
@@ -127,7 +125,7 @@ const { config } = await octokit.config.get({
       <th><code>defaults</code></th>
       <td>String</td>
       <td>
-        Default options that are returned if the configuration file does not exist, or merged with the contents if it does exist. Defaults to <code>{}</code>
+        Default options that are returned if the configuration file does not exist, or merged with the contents if it does exist. Defaults are merged using shallowly using <code>Object.assign</code>. For custom merge strategies, you can set <code>defaults</code> to a function, see <a href="#custom-configuration-merging">Merging configuration</a> below for more information. Defaults to <code>{}</code>
       </td>
     </tr>
     <tr>
@@ -144,15 +142,10 @@ const { config } = await octokit.config.get({
         Defaults to the repository's default branch.
       </td>
     </tr>
-    <tr>
-      <th><code>deepmerge</code></th>
-      <td>String</td>
-      <td>
-        Options for merging contents of the configuration files and <code>defaults</code>. See <a href="https://github.com/TehShrike/deepmerge#options"><code>deepmerge</code> options</a> for details.
-      </td>
-    </tr>
   </tbody>
 </table>
+
+<a name="extends"></a>
 
 ### The `_extends` key
 
@@ -192,6 +185,97 @@ other: FFF
 ```
 
 You can also disable merging with other configuration files by setting `_extends` to `false`.
+
+<a name="custom-configuration-merging"></a>
+
+### Merging configuration
+
+Given `.github/test.yml`:
+
+```yml
+settings:
+  one: value from configuration
+```
+
+And
+
+```js
+const { config } = await octokit.config.get({
+  owner,
+  repo,
+  filename: "test.yml",
+  defaults: {
+    settings: {
+      one: "default value",
+      two: "default value",
+    },
+  },
+});
+```
+
+The resulting `config` object is
+
+```js
+{
+  settings: {
+    one: "value from configuration";
+  }
+}
+```
+
+And not as you might expect
+
+```js
+{
+  settings: {
+    one: "value from configuration";
+    two: "default value";
+  }
+}
+```
+
+The reason for that behavior is that merging objects deeply is not supported in JavaScript by default, and there are different strategies and many pitfals. There are many libraries that support deep merging in different ways, but instead making that decision for and significantly increasing the bundle size of this plugin, we let you pass a custom merge strategy instead.
+
+In order to achive the deeply merged configuration, the code needs to be changed to
+
+```js
+const defaults = {
+  settings: {
+    one: "default value",
+    two: "default value",
+  },
+};
+const { config } = await octokit.config.get({
+  owner,
+  repo,
+  filename: "test.yml",
+  defaults(config) {
+    // start with the default shallwo merge
+    const mergedConfig = Object.assign({}, defaults, config);
+    if (config) {
+      // now merge the properties from defaults.settings & config.settings
+      mergedConfig.settings = Object.assign(
+        {},
+        defaults.settings,
+        config.settings
+      );
+    }
+
+    return mergedConfig;
+  },
+});
+```
+
+Or simpler, using a library such as [deepmerge](https://github.com/TehShrike/deepmerge)
+
+```js
+const { config } = await octokit.config.get({
+  owner,
+  repo,
+  filename: "test.yml",
+  defaults: (config) => deepmerge([defaults, config]),
+});
+```
 
 ## Contributing
 
