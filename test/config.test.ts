@@ -3,7 +3,7 @@ import fetchMock from "fetch-mock";
 import stripIndent from "strip-indent";
 
 import { config } from "../src";
-import { Configuration, File } from "../src/types";
+import { Configuration } from "../src/types";
 
 const TestOctokit = Octokit.plugin(config);
 
@@ -559,10 +559,46 @@ it(".unknown extension", async () => {
     );
   }
 });
-it.todo("_extends: other-owner/base");
-it.todo("_extends: base:test.yml");
-it.todo("malformed JSON");
+
+it("malformed json", async () => {
+  expect.assertions(2);
+
+  const mock = fetchMock
+    .sandbox()
+    .getOnce(
+      "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.json",
+      "malformed json",
+      {
+        headers: {
+          accept: "application/vnd.github.v3.raw",
+        },
+      }
+    );
+  const octokit = new TestOctokit({
+    request: {
+      fetch: mock,
+    },
+  });
+
+  try {
+    await octokit.config.get({
+      owner: "octocat",
+      repo: "hello-world",
+      filename: "my-app.json",
+    });
+  } catch (error) {
+    expect(error.message).toMatchInlineSnapshot(
+      `"[@probot/octokit-plugin-config] Configuration could not be parsed from https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.json (invalid JSON)"`
+    );
+  }
+
+  expect(mock.done()).toBe(true);
+});
+
 it.todo("malformed YAML");
 it.todo("unsafe YAML");
+it.todo("_extends: other-owner/base");
+it.todo("_extends: base:test.yml");
+
 it.todo("_extends: { nope }");
 it.todo("_extends: 'nope!'");

@@ -68,6 +68,12 @@ export async function getConfigFile(
     }
 
     if (fileExtension === "json") {
+      if (typeof data === "string") {
+        throw new Error(
+          `[@probot/octokit-plugin-config] Configuration could not be parsed from ${requestOptions.url} (invalid JSON)`
+        );
+      }
+
       return {
         owner,
         repo,
