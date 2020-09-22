@@ -1,5 +1,7 @@
 import { Octokit } from "@octokit/core";
 import fetchMock from "fetch-mock";
+import stripIndent from "strip-indent";
+
 import { config } from "../src";
 
 const TestOctokit = Octokit.plugin(config);
@@ -173,6 +175,53 @@ describe("octokit.config.get", () => {
     expect(config).toStrictEqual({
       config: "value from octocat/.github:.github/my-app.yml",
       otherConfig: "default value",
+    });
+    expect(mock.done()).toBe(true);
+  });
+
+  it("merges deeply using defaults function", async () => {
+    const mock = fetchMock.sandbox().getOnce(
+      "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
+      stripIndent(`
+          settings:
+            one: value from config file
+          otherSetting1: value from config file`)
+    );
+
+    const octokit = new TestOctokit({
+      request: {
+        fetch: mock,
+      },
+    });
+
+    const defaults = {
+      settings: {
+        one: "default value",
+        two: "default value",
+      },
+      otherSetting1: "default value",
+      otherSetting2: "default value",
+    };
+    const { config } = await octokit.config.get<typeof defaults>({
+      owner: "octocat",
+      repo: "hello-world",
+      filename: "my-app.yml",
+      defaults(config) {
+        return Object.assign({}, defaults, config, {
+          settings: config
+            ? Object.assign({}, defaults.settings, config.settings)
+            : defaults.settings,
+        });
+      },
+    });
+
+    expect(config).toStrictEqual({
+      settings: {
+        one: "value from config file",
+        two: "default value",
+      },
+      otherSetting1: "value from config file",
+      otherSetting2: "default value",
     });
     expect(mock.done()).toBe(true);
   });
