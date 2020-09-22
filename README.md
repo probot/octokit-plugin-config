@@ -197,6 +197,10 @@ You can also disable merging with other configuration files by setting `_extends
 
 See [CONTRIBUTING.md](CONTRIBUTING.md)
 
+## Credits
+
+The idea for this plugin and some of its code was extracted from [Probot](https://probot.github.io/). It originated as [probot-config](https://github.com/probot/probot-config), created by [Jan Michael Auer](https://github.com/jan-auer) and was later merged into [`probot`](https://github.com/probot/probot).
+
 ## License
 
-[MIT](LICENSE)
+[ISC](LICENSE)
