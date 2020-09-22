@@ -15,7 +15,7 @@ type Options = {
  * @param octokit Octokit instance
  * @param options
  */
-export async function getConfigFile<T>(
+export async function getConfigFile(
   octokit: Octokit,
   { owner, repo, path }: Options
 ): Promise<File> {
@@ -54,6 +54,16 @@ export async function getConfigFile<T>(
         path,
         url: requestOptions.url,
         config: null,
+      };
+    }
+
+    if (/\.json/.test(path)) {
+      return {
+        owner,
+        repo,
+        path,
+        url: requestOptions.url,
+        config: data,
       };
     }
 

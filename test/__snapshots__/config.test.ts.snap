@@ -1,5 +1,24 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`.json extension: result 1`] = `
+Object {
+  "config": Object {
+    "comment": "Thank you for creating the issue!",
+  },
+  "files": Array [
+    Object {
+      "config": Object {
+        "comment": "Thank you for creating the issue!",
+      },
+      "owner": "octocat",
+      "path": ".github/my-app.json",
+      "repo": "hello-world",
+      "url": "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.json",
+    },
+  ],
+}
+`;
+
 exports[`.yaml extension: result 1`] = `
 Object {
   "config": Object {
