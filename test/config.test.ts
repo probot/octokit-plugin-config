@@ -443,6 +443,51 @@ it("request error", async () => {
   expect(mock.done()).toBe(true);
 });
 
+it("recursion", async () => {
+  const mock = fetchMock
+    .sandbox()
+    .getOnce(
+      "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
+      stripIndent(`
+        settings:
+          one: value from repo config file
+        otherSetting1: value from repo config file
+        _extends: base`)
+    )
+    .getOnce(
+      "https://api.github.com/repos/octocat/base/contents/.github%2Fmy-app.yml",
+      stripIndent(`
+        settings:
+          one: value from base config file
+          two: value from base config file
+        otherSetting1: value from base config file
+        otherSetting2: value from base config file
+        _extends: hello-world`)
+    );
+
+  const log = {
+    debug: jest.fn(),
+    info: jest.fn(),
+    warn: jest.fn(),
+    error: jest.fn(),
+  };
+  const octokit = new TestOctokit({
+    log,
+    request: {
+      fetch: mock,
+    },
+  });
+  const result = await octokit.config.get({
+    owner: "octocat",
+    repo: "hello-world",
+    filename: "my-app.yml",
+  });
+
+  expect(result).toMatchSnapshot("result");
+  expect(log).toMatchSnapshot("log");
+  expect(mock.done()).toBe(true);
+});
+
 //   it("merges the base and default config", async () => {
 //     jest
 //       .spyOn(github, "request")

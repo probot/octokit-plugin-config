@@ -4,5 +4,6 @@ export type File = {
   owner: string;
   repo: string;
   path: string;
+  url: string;
   config: Configuration | null;
 };

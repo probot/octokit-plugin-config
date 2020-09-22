@@ -19,19 +19,20 @@ export async function getConfigFile<T>(
   octokit: Octokit,
   { owner, repo, path }: Options
 ): Promise<File> {
+  // https://docs.github.com/en/rest/reference/repos#get-repository-content
+  const requestOptions = await octokit.request.endpoint(
+    "GET /repos/{owner}/{repo}/contents/{path}",
+    {
+      owner,
+      repo,
+      path,
+      mediaType: {
+        format: "raw",
+      },
+    }
+  );
+
   try {
-    // https://docs.github.com/en/rest/reference/repos#get-repository-content
-    const requestOptions = await octokit.request.endpoint(
-      "GET /repos/{owner}/{repo}/contents/{path}",
-      {
-        owner,
-        repo,
-        path,
-        mediaType: {
-          format: "raw",
-        },
-      }
-    );
     const { data, headers } = await octokit.request(requestOptions);
 
     // If path is a submodule, or a folder, then a JSON string is returned with
@@ -51,6 +52,7 @@ export async function getConfigFile<T>(
         owner,
         repo,
         path,
+        url: requestOptions.url,
         config: null,
       };
     }
@@ -59,6 +61,7 @@ export async function getConfigFile<T>(
       owner,
       repo,
       path,
+      url: requestOptions.url,
       config: ((yaml.safeLoad(data) || {}) as unknown) as Configuration,
     };
   } catch (error) {
@@ -67,6 +70,7 @@ export async function getConfigFile<T>(
         owner,
         repo,
         path,
+        url: requestOptions.url,
         config: null,
       };
     }
