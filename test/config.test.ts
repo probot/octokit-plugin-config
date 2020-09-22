@@ -542,7 +542,23 @@ it(".json extension", async () => {
   expect(mock.done()).toBe(true);
 });
 
-it.todo(".unknown extension");
+it(".unknown extension", async () => {
+  expect.assertions(1);
+
+  const octokit = new TestOctokit();
+
+  try {
+    await octokit.config.get({
+      owner: "octocat",
+      repo: "hello-world",
+      filename: "my-app.unknown",
+    });
+  } catch (error) {
+    expect(error.message).toEqual(
+      '[@probot/octokit-plugin-config] .unknown extension is not support for configuration (path: ".github/my-app.unknown")'
+    );
+  }
+});
 it.todo("_extends: other-owner/base");
 it.todo("_extends: base:test.yml");
 it.todo("malformed JSON");

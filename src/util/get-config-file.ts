@@ -9,6 +9,8 @@ type Options = {
   path: string;
 };
 
+const SUPPORTED_FILE_EXTENSIONS = ["json", "yml", "yaml"];
+
 /**
  * Load configuration from a given repository and path.
  *
@@ -19,6 +21,14 @@ export async function getConfigFile(
   octokit: Octokit,
   { owner, repo, path }: Options
 ): Promise<File> {
+  const fileExtension = path.split(".").pop()?.toLowerCase() as string;
+
+  if (!SUPPORTED_FILE_EXTENSIONS.includes(fileExtension)) {
+    throw new Error(
+      `[@probot/octokit-plugin-config] .${fileExtension} extension is not support for configuration (path: "${path}")`
+    );
+  }
+
   // https://docs.github.com/en/rest/reference/repos#get-repository-content
   const requestOptions = await octokit.request.endpoint(
     "GET /repos/{owner}/{repo}/contents/{path}",
@@ -57,7 +67,7 @@ export async function getConfigFile(
       };
     }
 
-    if (/\.json/.test(path)) {
+    if (fileExtension === "json") {
       return {
         owner,
         repo,
