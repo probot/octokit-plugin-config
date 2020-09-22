@@ -1,5 +1,24 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`.yaml extension: result 1`] = `
+Object {
+  "config": Object {
+    "comment": "Thank you for creating the issue!",
+  },
+  "files": Array [
+    Object {
+      "config": Object {
+        "comment": "Thank you for creating the issue!",
+      },
+      "owner": "octocat",
+      "path": ".github/my-app.yaml",
+      "repo": "hello-world",
+      "url": "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yaml",
+    },
+  ],
+}
+`;
+
 exports[`_extends file is missing: result 1`] = `
 Object {
   "config": Object {

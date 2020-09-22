@@ -488,9 +488,36 @@ it("recursion", async () => {
   expect(mock.done()).toBe(true);
 });
 
+it(".yaml extension", async () => {
+  const mock = fetchMock
+    .sandbox()
+    .getOnce(
+      "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yaml",
+      `comment: 'Thank you for creating the issue!'`,
+      {
+        headers: {
+          accept: "application/vnd.github.v3.raw",
+        },
+      }
+    );
+  const octokit = new TestOctokit({
+    request: {
+      fetch: mock,
+    },
+  });
+
+  const result = await octokit.config.get({
+    owner: "octocat",
+    repo: "hello-world",
+    filename: "my-app.yaml",
+  });
+
+  expect(result).toMatchSnapshot("result");
+  expect(mock.done()).toBe(true);
+});
+
 it.todo("_extends: other-owner/base");
 it.todo("_extends: base:test.yml");
-it.todo(".yaml extension");
 it.todo(".json extension");
 it.todo("malformed JSON");
 it.todo("malformed YAML");
