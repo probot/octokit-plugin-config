@@ -1,34 +1,47 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`octokit.config.get _extends: base 1`] = `
+exports[`config file is a submodule: log 1`] = `
 Object {
-  "config": Object {
-    "setting1": "value from repo config file",
-    "setting2": "value from base config file",
+  "debug": [MockFunction],
+  "error": [MockFunction],
+  "info": [MockFunction],
+  "warn": [MockFunction] {
+    "calls": Array [
+      Array [
+        "[@probot/octokit-plugin-config] https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml exists, but is either a directory or a submodule. Ignoring.",
+      ],
+    ],
+    "results": Array [
+      Object {
+        "type": "return",
+        "value": undefined,
+      },
+    ],
   },
+}
+`;
+
+exports[`config file is a submodule: result 1`] = `
+Object {
+  "config": Object {},
   "files": Array [
     Object {
-      "config": Object {
-        "setting1": "value from repo config file",
-      },
+      "config": null,
       "owner": "octocat",
       "path": ".github/my-app.yml",
       "repo": "hello-world",
     },
     Object {
-      "config": Object {
-        "setting1": "value from base config file",
-        "setting2": "value from base config file",
-      },
+      "config": null,
       "owner": "octocat",
       "path": ".github/my-app.yml",
-      "repo": "base",
+      "repo": ".github",
     },
   ],
 }
 `;
 
-exports[`octokit.config.get _extends: base with defaults and custom merge 1`] = `
+exports[`octokit.config.get _extends: base with defaults and custom merge: result 1`] = `
 Object {
   "config": Object {
     "otherSetting1": "value from repo config file",
@@ -69,7 +82,53 @@ Object {
 }
 `;
 
-exports[`octokit.config.get config file missing 1`] = `
+exports[`octokit.config.get _extends: base: result 1`] = `
+Object {
+  "config": Object {
+    "setting1": "value from repo config file",
+    "setting2": "value from base config file",
+  },
+  "files": Array [
+    Object {
+      "config": Object {
+        "setting1": "value from repo config file",
+      },
+      "owner": "octocat",
+      "path": ".github/my-app.yml",
+      "repo": "hello-world",
+    },
+    Object {
+      "config": Object {
+        "setting1": "value from base config file",
+        "setting2": "value from base config file",
+      },
+      "owner": "octocat",
+      "path": ".github/my-app.yml",
+      "repo": "base",
+    },
+  ],
+}
+`;
+
+exports[`octokit.config.get README simple usage example: result 1`] = `
+Object {
+  "config": Object {
+    "comment": "Thank you for creating the issue!",
+  },
+  "files": Array [
+    Object {
+      "config": Object {
+        "comment": "Thank you for creating the issue!",
+      },
+      "owner": "octocat",
+      "path": ".github/my-app.yml",
+      "repo": "hello-world",
+    },
+  ],
+}
+`;
+
+exports[`octokit.config.get config file missing: result 1`] = `
 Object {
   "config": Object {
     "comment": "Thank you for creating the issue!",
@@ -91,7 +150,7 @@ Object {
 }
 `;
 
-exports[`octokit.config.get defaults option when no config present 1`] = `
+exports[`octokit.config.get defaults option when no config present: result 1`] = `
 Object {
   "config": Object {
     "comment": "Thank you for creating the issue!",
@@ -113,7 +172,7 @@ Object {
 }
 `;
 
-exports[`octokit.config.get merges deeply using defaults function 1`] = `
+exports[`octokit.config.get merges deeply using defaults function: result 1`] = `
 Object {
   "config": Object {
     "otherSetting1": "value from config file",
@@ -130,6 +189,50 @@ Object {
         "settings": Object {
           "one": "value from config file",
         },
+      },
+      "owner": "octocat",
+      "path": ".github/my-app.yml",
+      "repo": "hello-world",
+    },
+  ],
+}
+`;
+
+exports[`octokit.config.get merges defaults option from .github repository: result 1`] = `
+Object {
+  "config": Object {
+    "config": "value from octocat/.github:.github/my-app.yml",
+    "otherConfig": "default value",
+  },
+  "files": Array [
+    Object {
+      "config": null,
+      "owner": "octocat",
+      "path": ".github/my-app.yml",
+      "repo": "hello-world",
+    },
+    Object {
+      "config": Object {
+        "config": "value from octocat/.github:.github/my-app.yml",
+      },
+      "owner": "octocat",
+      "path": ".github/my-app.yml",
+      "repo": ".github",
+    },
+  ],
+}
+`;
+
+exports[`octokit.config.get merges defaults option: result 1`] = `
+Object {
+  "config": Object {
+    "config": "value from .github/my-app.yml",
+    "otherConfig": "default value",
+  },
+  "files": Array [
+    Object {
+      "config": Object {
+        "config": "value from .github/my-app.yml",
       },
       "owner": "octocat",
       "path": ".github/my-app.yml",

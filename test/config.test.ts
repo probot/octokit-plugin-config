@@ -48,15 +48,13 @@ describe("octokit.config.get", () => {
       },
     });
 
-    const { config } = await octokit.config.get({
+    const result = await octokit.config.get({
       owner: "octocat",
       repo: "hello-world",
       filename: "my-app.yml",
     });
 
-    expect(config).toStrictEqual({
-      comment: "Thank you for creating the issue!",
-    });
+    expect(result).toMatchSnapshot("result");
     expect(mock.done()).toBe(true);
   });
 
@@ -87,7 +85,7 @@ describe("octokit.config.get", () => {
       },
     });
 
-    expect(result).toMatchSnapshot();
+    expect(result).toMatchSnapshot("result");
     expect(mock.done()).toBe(true);
   });
 
@@ -118,7 +116,7 @@ describe("octokit.config.get", () => {
       },
     });
 
-    expect(result).toMatchSnapshot();
+    expect(result).toMatchSnapshot("result");
     expect(mock.done()).toBe(true);
   });
 
@@ -136,7 +134,7 @@ describe("octokit.config.get", () => {
       },
     });
 
-    const { config } = await octokit.config.get({
+    const result = await octokit.config.get({
       owner: "octocat",
       repo: "hello-world",
       filename: "my-app.yml",
@@ -146,10 +144,7 @@ describe("octokit.config.get", () => {
       },
     });
 
-    expect(config).toStrictEqual({
-      config: "value from .github/my-app.yml",
-      otherConfig: "default value",
-    });
+    expect(result).toMatchSnapshot("result");
     expect(mock.done()).toBe(true);
   });
 
@@ -171,7 +166,7 @@ describe("octokit.config.get", () => {
       },
     });
 
-    const { config } = await octokit.config.get({
+    const result = await octokit.config.get({
       owner: "octocat",
       repo: "hello-world",
       filename: "my-app.yml",
@@ -181,10 +176,7 @@ describe("octokit.config.get", () => {
       },
     });
 
-    expect(config).toStrictEqual({
-      config: "value from octocat/.github:.github/my-app.yml",
-      otherConfig: "default value",
-    });
+    expect(result).toMatchSnapshot("result");
     expect(mock.done()).toBe(true);
   });
 
@@ -218,7 +210,7 @@ describe("octokit.config.get", () => {
       defaults: (configs) => deepMergeSettings(defaults, configs),
     });
 
-    expect(result).toMatchSnapshot();
+    expect(result).toMatchSnapshot("result");
     expect(mock.done()).toBe(true);
   });
 
@@ -249,7 +241,7 @@ describe("octokit.config.get", () => {
       filename: "my-app.yml",
     });
 
-    expect(result).toMatchSnapshot();
+    expect(result).toMatchSnapshot("result");
     expect(mock.done()).toBe(true);
   });
 
@@ -296,9 +288,51 @@ describe("octokit.config.get", () => {
       defaults: (configs) => deepMergeSettings(defaults, configs),
     });
 
-    expect(result).toMatchSnapshot();
+    expect(result).toMatchSnapshot("result");
     expect(mock.done()).toBe(true);
   });
+});
+
+it("config file is a submodule", async () => {
+  const mock = fetchMock
+    .sandbox()
+    .getOnce(
+      "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
+      {
+        body: {},
+        headers: {
+          "content-type": "application/json; charset=utf-8",
+        },
+      }
+    )
+    .getOnce(
+      "https://api.github.com/repos/octocat/.github/contents/.github%2Fmy-app.yml",
+      NOT_FOUND_RESPONSE
+    );
+
+  const log = {
+    debug: jest.fn(),
+    info: jest.fn(),
+    warn: jest.fn(),
+    error: jest.fn(),
+  };
+
+  const octokit = new TestOctokit({
+    log,
+    request: {
+      fetch: mock,
+    },
+  });
+
+  const result = await octokit.config.get({
+    owner: "octocat",
+    repo: "hello-world",
+    filename: "my-app.yml",
+  });
+
+  expect(result).toMatchSnapshot("result");
+  expect(log).toMatchSnapshot("log");
+  expect(mock.done()).toBe(true);
 });
 
 //   it("merges the base and default config", async () => {
