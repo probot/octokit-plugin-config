@@ -92,6 +92,7 @@
   },
   "dependencies": {
     "@types/js-yaml": "^3.12.5",
+    "deepmerge": "^4.2.2",
     "js-yaml": "^3.14.0"
   }
 }
