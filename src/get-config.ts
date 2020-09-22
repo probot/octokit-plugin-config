@@ -1,14 +1,16 @@
 import { Octokit } from "@octokit/core";
 import yaml from "js-yaml";
 
+import type { Configuration } from "./types";
+
 type GetOptions = {
   owner: string;
   repo: string;
   path: string;
 };
 
-type Config = {
-  config: Record<string, unknown> | null;
+type Config<T> = {
+  config: T | null;
 };
 
 /**
@@ -19,10 +21,10 @@ type Config = {
  * @param octokit Octokit instance
  * @param options
  */
-export async function getConfig(
+export async function getConfig<T>(
   octokit: Octokit,
   { owner, repo, path }: GetOptions
-): Promise<Config> {
+): Promise<Config<T>> {
   try {
     // https://docs.github.com/en/rest/reference/repos#get-repository-content
     const { data, headers } = await octokit.request(
@@ -52,7 +54,7 @@ export async function getConfig(
     }
 
     return {
-      config: (yaml.safeLoad(data) as Record<string, unknown>) || {},
+      config: ((yaml.safeLoad(data) as unknown) as T) || null,
     };
   } catch (error) {
     if (error.status === 404) {

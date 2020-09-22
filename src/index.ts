@@ -3,11 +3,19 @@ import { Octokit } from "@octokit/core";
 import { VERSION } from "./version";
 import { getConfig } from "./get-config";
 
-type GetOptions = {
+import type { Configuration } from "./types";
+
+type defaultsFunction<T> = (config: T | null) => T;
+
+type GetOptions<T> = {
   owner: string;
   repo: string;
   filename: string;
-  defaults?: Record<string, unknown>;
+  defaults?: T | defaultsFunction<T>;
+};
+
+type GetResult<T> = {
+  config: T;
 };
 
 /**
@@ -16,13 +24,21 @@ type GetOptions = {
 export function config(octokit: Octokit) {
   return {
     config: {
-      async get({ owner, repo, filename, defaults }: GetOptions) {
+      async get<T extends Configuration = Configuration>({
+        owner,
+        repo,
+        filename,
+        defaults,
+      }: GetOptions<T>): Promise<GetResult<T>> {
         const path = `.github/${filename}`;
 
-        const { config } = await getConfig(octokit, { owner, repo, path });
+        const { config } = await getConfig<T>(octokit, { owner, repo, path });
 
         return {
-          config: Object.assign({}, defaults, config),
+          config:
+            typeof defaults === "function"
+              ? defaults(config)
+              : Object.assign({}, defaults, config),
         };
       },
     },
