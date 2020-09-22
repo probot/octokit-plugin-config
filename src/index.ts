@@ -1,5 +1,4 @@
 import { Octokit } from "@octokit/core";
-import merge from "deepmerge";
 
 import { VERSION } from "./version";
 import { getConfig } from "./get-config";
@@ -23,7 +22,7 @@ export function config(octokit: Octokit) {
         const { config } = await getConfig(octokit, { owner, repo, path });
 
         return {
-          config: merge.all([defaults, config].filter(Boolean) as object[]),
+          config: Object.assign({}, defaults, config),
         };
       },
     },
