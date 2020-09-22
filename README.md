@@ -6,7 +6,7 @@
 [![Build Status](https://github.com/probot/octokit-plugin-config/workflows/Test/badge.svg)](https://github.com/probot/octokit-plugin-config/actions?query=workflow%3ATest+branch%3Amain)
 [![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=probot/octokit-plugin-config)](https://dependabot.com/)
 
-By default, this plugin loads configuration from `/.github/[filename]` in the provided repository. If the file doesn't exist, it looks for the same file in the same owner's `.github` repository.
+By default, this plugin loads configuration from `/.github/[filename]` in the provided repository. If the file doesn't exist, it loads configuration from the same path in the same owner's `.github` repository.
 
 Configuration can be loaded from multiple files by utilizing [the `_extends` key](#extends).
 
@@ -70,8 +70,8 @@ const { config } = await octokit.config.set({
   },
 });
 
-// all options
-const { config } = await octokit.config.get({
+// all options and returns
+const { config, files } = await octokit.config.get({
   owner: "octocat",
   repo: "hello-world",
   filename: "my-app.yml",
@@ -81,6 +81,7 @@ const { config } = await octokit.config.get({
   path: "",
   branch: "develop",
 });
+// files is an array of { owner, repo, path, config } objects
 ```
 
 ## Options
@@ -236,7 +237,7 @@ And not as you might expect
 
 The reason for that behavior is that merging objects deeply is not supported in JavaScript by default, and there are different strategies and many pitfals. There are many libraries that support deep merging in different ways, but instead making that decision for and significantly increasing the bundle size of this plugin, we let you pass a custom merge strategy instead.
 
-In order to achive the deeply merged configuration, the code needs to be changed to
+In order to achive the deeply merged configuration, the `defaults` option can be set to a function. The function receives one `configs` argument, which is an array of configurations loaded from files in reverse order, so that the latter items should take precedence over the former items. The `configs` array can have more than one object if [the `_extends` key](#extends) is used.
 
 ```js
 const defaults = {
@@ -249,19 +250,14 @@ const { config } = await octokit.config.get({
   owner,
   repo,
   filename: "test.yml",
-  defaults(config) {
-    // start with the default shallwo merge
-    const mergedConfig = Object.assign({}, defaults, config);
-    if (config) {
-      // now merge the properties from defaults.settings & config.settings
-      mergedConfig.settings = Object.assign(
-        {},
-        defaults.settings,
-        config.settings
-      );
-    }
-
-    return mergedConfig;
+  defaults(configs) {
+    const allConfigs = [defaults, ...configs];
+    const fileSettingsConfigs = allConfigs.map(
+      (config: Configuration) => config.settings
+    );
+    return Object.assign({}, ...allConfigs, {
+      settings: Object.assign({}, ...fileSettingsConfigs),
+    });
   },
 });
 ```
@@ -273,7 +269,7 @@ const { config } = await octokit.config.get({
   owner,
   repo,
   filename: "test.yml",
-  defaults: (config) => deepmerge([defaults, config]),
+  defaults: (configs) => deepmerge([defaults, ...configs]),
 });
 ```
 
