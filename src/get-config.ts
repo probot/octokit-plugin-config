@@ -13,6 +13,10 @@ type Config<T> = {
   config: T | null;
 };
 
+type Extends = {
+  _extends?: string;
+};
+
 /**
  * Load configuration for a given repository and path. If the file does not exist,
  * it loads the configuration from the same file in the `.github` repository by the
@@ -53,8 +57,21 @@ export async function getConfig<T>(
       };
     }
 
+    const config = ((yaml.safeLoad(data) as unknown) as T & Extends) || null;
+
+    if (!config || !config._extends) {
+      return { config };
+    }
+
+    const { config: configExtension } = await getConfig(octokit, {
+      owner,
+      repo: config._extends,
+      path,
+    });
+
+    delete config._extends;
     return {
-      config: ((yaml.safeLoad(data) as unknown) as T) || null,
+      config: Object.assign(configExtension, config),
     };
   } catch (error) {
     if (error.status === 404) {

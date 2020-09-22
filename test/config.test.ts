@@ -225,4 +225,38 @@ describe("octokit.config.get", () => {
     });
     expect(mock.done()).toBe(true);
   });
+
+  it("_extends: base", async () => {
+    const mock = fetchMock
+      .sandbox()
+      .getOnce(
+        "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
+        stripIndent(`
+        setting1: value from repo config file
+        _extends: base`)
+      )
+      .getOnce(
+        "https://api.github.com/repos/octocat/base/contents/.github%2Fmy-app.yml",
+        stripIndent(`
+        setting1: value from base config file
+        setting2: value from base config file`)
+      );
+
+    const octokit = new TestOctokit({
+      request: {
+        fetch: mock,
+      },
+    });
+    const { config } = await octokit.config.get({
+      owner: "octocat",
+      repo: "hello-world",
+      filename: "my-app.yml",
+    });
+
+    expect(config).toStrictEqual({
+      setting1: "value from repo config file",
+      setting2: "value from base config file",
+    });
+    expect(mock.done()).toBe(true);
+  });
 });
