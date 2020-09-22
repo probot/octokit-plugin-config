@@ -185,8 +185,6 @@ _extends: probot-settings:.github/other_test.yml
 other: FFF
 ```
 
-You can also disable merging with other configuration files by setting `_extends` to `false`.
-
 <a name="custom-configuration-merging"></a>
 
 ### Merging configuration
