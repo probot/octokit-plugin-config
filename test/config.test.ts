@@ -595,7 +595,75 @@ it("malformed json", async () => {
   expect(mock.done()).toBe(true);
 });
 
-it.todo("malformed YAML");
+it("malformed yaml", async () => {
+  expect.assertions(2);
+
+  const mock = fetchMock
+    .sandbox()
+    .getOnce(
+      "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yaml",
+      "malformed yaml",
+      {
+        headers: {
+          accept: "application/vnd.github.v3.raw",
+        },
+      }
+    );
+  const octokit = new TestOctokit({
+    request: {
+      fetch: mock,
+    },
+  });
+
+  try {
+    await octokit.config.get({
+      owner: "octocat",
+      repo: "hello-world",
+      filename: "my-app.yaml",
+    });
+  } catch (error) {
+    expect(error.message).toMatchInlineSnapshot(
+      `"[@probot/octokit-plugin-config] Configuration could not be parsed from https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yaml (YAML is not an object)"`
+    );
+  }
+
+  expect(mock.done()).toBe(true);
+});
+it("malformed yaml: @", async () => {
+  expect.assertions(2);
+
+  const mock = fetchMock
+    .sandbox()
+    .getOnce(
+      "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yaml",
+      "@",
+      {
+        headers: {
+          accept: "application/vnd.github.v3.raw",
+        },
+      }
+    );
+  const octokit = new TestOctokit({
+    request: {
+      fetch: mock,
+    },
+  });
+
+  try {
+    await octokit.config.get({
+      owner: "octocat",
+      repo: "hello-world",
+      filename: "my-app.yaml",
+    });
+  } catch (error) {
+    expect(error.message).toMatchInlineSnapshot(
+      `"[@probot/octokit-plugin-config] Configuration could not be parsed from https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yaml (invalid YAML)"`
+    );
+  }
+
+  expect(mock.done()).toBe(true);
+});
+
 it.todo("unsafe YAML");
 it.todo("_extends: other-owner/base");
 it.todo("_extends: base:test.yml");
