@@ -33,6 +33,9 @@
     "ts-jest": "^26.4.0",
     "typescript": "^4.0.3"
   },
+  "peerDependencies": {
+    "@octokit/core": ">=3"
+  },
   "jest": {
     "preset": "ts-jest",
     "coverageThreshold": {
