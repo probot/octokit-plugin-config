@@ -335,6 +335,114 @@ it("config file is a submodule", async () => {
   expect(mock.done()).toBe(true);
 });
 
+it("config file is empty", async () => {
+  const mock = fetchMock
+    .sandbox()
+    .getOnce(
+      "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
+      ""
+    );
+
+  const octokit = new TestOctokit({
+    request: {
+      fetch: mock,
+    },
+  });
+
+  const result = await octokit.config.get({
+    owner: "octocat",
+    repo: "hello-world",
+    filename: "my-app.yml",
+  });
+
+  expect(result).toMatchSnapshot("result");
+  expect(mock.done()).toBe(true);
+});
+
+it("repo is .github", async () => {
+  const mock = fetchMock
+    .sandbox()
+    .getOnce(
+      "https://api.github.com/repos/octocat/.github/contents/.github%2Fmy-app.yml",
+      NOT_FOUND_RESPONSE
+    );
+
+  const octokit = new TestOctokit({
+    request: {
+      fetch: mock,
+    },
+  });
+
+  const result = await octokit.config.get({
+    owner: "octocat",
+    repo: ".github",
+    filename: "my-app.yml",
+  });
+
+  expect(result).toMatchSnapshot("result");
+  expect(mock.done()).toBe(true);
+});
+
+it("_extends file is missing", async () => {
+  const mock = fetchMock
+    .sandbox()
+    .getOnce(
+      "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
+      stripIndent(`
+      setting1: value from repo config file
+      _extends: base`)
+    )
+    .getOnce(
+      "https://api.github.com/repos/octocat/base/contents/.github%2Fmy-app.yml",
+      NOT_FOUND_RESPONSE
+    );
+
+  const octokit = new TestOctokit({
+    request: {
+      fetch: mock,
+    },
+  });
+  const result = await octokit.config.get({
+    owner: "octocat",
+    repo: "hello-world",
+    filename: "my-app.yml",
+  });
+
+  expect(result).toMatchSnapshot("result");
+  expect(mock.done()).toBe(true);
+});
+
+it("request error", async () => {
+  expect.assertions(2);
+
+  const mock = fetchMock
+    .sandbox()
+    .getOnce(
+      "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
+      {
+        status: 500,
+      }
+    );
+
+  const octokit = new TestOctokit({
+    request: {
+      fetch: mock,
+    },
+  });
+
+  try {
+    await octokit.config.get({
+      owner: "octocat",
+      repo: "hello-world",
+      filename: "my-app.yml",
+    });
+  } catch (error) {
+    expect(error.status).toEqual(500);
+  }
+
+  expect(mock.done()).toBe(true);
+});
+
 //   it("merges the base and default config", async () => {
 //     jest
 //       .spyOn(github, "request")

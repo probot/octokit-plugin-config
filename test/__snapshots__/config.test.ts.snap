@@ -1,5 +1,29 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`_extends file is missing: result 1`] = `
+Object {
+  "config": Object {
+    "setting1": "value from repo config file",
+  },
+  "files": Array [
+    Object {
+      "config": Object {
+        "setting1": "value from repo config file",
+      },
+      "owner": "octocat",
+      "path": ".github/my-app.yml",
+      "repo": "hello-world",
+    },
+    Object {
+      "config": null,
+      "owner": "octocat",
+      "path": ".github/my-app.yml",
+      "repo": "base",
+    },
+  ],
+}
+`;
+
 exports[`config file is a submodule: log 1`] = `
 Object {
   "debug": [MockFunction],
@@ -36,6 +60,20 @@ Object {
       "owner": "octocat",
       "path": ".github/my-app.yml",
       "repo": ".github",
+    },
+  ],
+}
+`;
+
+exports[`config file is empty: result 1`] = `
+Object {
+  "config": Object {},
+  "files": Array [
+    Object {
+      "config": Object {},
+      "owner": "octocat",
+      "path": ".github/my-app.yml",
+      "repo": "hello-world",
     },
   ],
 }
@@ -237,6 +275,20 @@ Object {
       "owner": "octocat",
       "path": ".github/my-app.yml",
       "repo": "hello-world",
+    },
+  ],
+}
+`;
+
+exports[`repo is .github: result 1`] = `
+Object {
+  "config": Object {},
+  "files": Array [
+    Object {
+      "config": null,
+      "owner": "octocat",
+      "path": ".github/my-app.yml",
+      "repo": ".github",
     },
   ],
 }
