@@ -1,13 +1,33 @@
-import { VERSION } from "./version";
+import { Octokit } from "@octokit/core";
+import merge from "deepmerge";
 
-type Octokit = any;
-type Options = {
-  [option: string]: any;
+import { VERSION } from "./version";
+import { getConfig } from "./get-config";
+
+type GetOptions = {
+  owner: string;
+  repo: string;
+  filename: string;
+  defaults?: Record<string, unknown>;
 };
 
 /**
  * @param octokit Octokit instance
- * @param options Options passed to Octokit constructor
  */
-export function config(octokit: Octokit, options: Options) {}
+export function config(octokit: Octokit) {
+  return {
+    config: {
+      async get({ owner, repo, filename, defaults }: GetOptions) {
+        const path = `.github/${filename}`;
+
+        const { config } = await getConfig(octokit, { owner, repo, path });
+
+        return {
+          config: merge.all([defaults, config].filter(Boolean) as object[]),
+        };
+      },
+    },
+  };
+}
+
 config.VERSION = VERSION;
