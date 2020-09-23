@@ -7,6 +7,7 @@ type Options = {
   owner: string;
   repo: string;
   path: string;
+  ref?: string;
 };
 
 const SUPPORTED_FILE_EXTENSIONS = ["json", "yml", "yaml"];
@@ -19,7 +20,7 @@ const SUPPORTED_FILE_EXTENSIONS = ["json", "yml", "yaml"];
  */
 export async function getConfigFile(
   octokit: Octokit,
-  { owner, repo, path }: Options
+  { owner, repo, path, ref }: Options
 ): Promise<File> {
   const fileExtension = path.split(".").pop()?.toLowerCase() as string;
 
@@ -39,6 +40,7 @@ export async function getConfigFile(
       mediaType: {
         format: "raw",
       },
+      ...(ref ? { ref } : {}),
     }
   );
 

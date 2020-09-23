@@ -11,6 +11,7 @@ type Options = {
   repo: string;
   filename: string;
   path?: string;
+  branch?: string;
 };
 
 /**
@@ -25,7 +26,7 @@ type Options = {
  */
 export async function getConfigFiles(
   octokit: Octokit,
-  { owner, repo, filename, path = ".github/" }: Options
+  { owner, repo, filename, path = ".github/", branch }: Options
 ): Promise<File[]> {
   const fullPath = join(path, filename);
 
@@ -33,6 +34,7 @@ export async function getConfigFiles(
     owner,
     repo,
     path: fullPath,
+    ref: branch,
   });
 
   // if no configuration file present in selected repository,

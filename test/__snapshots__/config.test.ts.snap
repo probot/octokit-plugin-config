@@ -288,6 +288,25 @@ Object {
 }
 `;
 
+exports[`octokit.config.get branch option: result 1`] = `
+Object {
+  "config": Object {
+    "comment": "Thank you for creating the issue!",
+  },
+  "files": Array [
+    Object {
+      "config": Object {
+        "comment": "Thank you for creating the issue!",
+      },
+      "owner": "octocat",
+      "path": ".github/my-app.yml",
+      "repo": "hello-world",
+      "url": "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml?ref=my-branch",
+    },
+  ],
+}
+`;
+
 exports[`octokit.config.get config file is empty: result 1`] = `
 Object {
   "config": Object {},
