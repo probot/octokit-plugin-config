@@ -101,9 +101,13 @@ export async function getConfigFile(
       };
     }
 
-    if (/end of the stream or a document separator/.test(error.message)) {
+    if (error.name === "YAMLException") {
+      const reason = /unknown tag/.test(error.message)
+        ? "unsafe YAML"
+        : "invalid YAML";
+
       throw new Error(
-        `[@probot/octokit-plugin-config] Configuration could not be parsed from ${requestOptions.url} (invalid YAML)`
+        `[@probot/octokit-plugin-config] Configuration could not be parsed from ${requestOptions.url} (${reason})`
       );
     }
 

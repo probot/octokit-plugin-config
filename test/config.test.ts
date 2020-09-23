@@ -622,6 +622,7 @@ it("malformed yaml", async () => {
 
   expect(mock.done()).toBe(true);
 });
+
 it("malformed yaml: @", async () => {
   expect.assertions(2);
 
@@ -656,8 +657,41 @@ it("malformed yaml: @", async () => {
 
   expect(mock.done()).toBe(true);
 });
+it("unsafe yaml", async () => {
+  expect.assertions(2);
 
-it.todo("unsafe YAML");
+  const mock = fetchMock
+    .sandbox()
+    .getOnce(
+      "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yaml",
+      'evil: !<tag:yaml.org,2002:js/function> "function () {}"',
+      {
+        headers: {
+          accept: "application/vnd.github.v3.raw",
+        },
+      }
+    );
+  const octokit = new TestOctokit({
+    request: {
+      fetch: mock,
+    },
+  });
+
+  try {
+    await octokit.config.get({
+      owner: "octocat",
+      repo: "hello-world",
+      filename: "my-app.yaml",
+    });
+  } catch (error) {
+    expect(error.message).toMatchInlineSnapshot(
+      `"[@probot/octokit-plugin-config] Configuration could not be parsed from https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yaml (unsafe YAML)"`
+    );
+  }
+
+  expect(mock.done()).toBe(true);
+});
+
 it.todo("_extends: other-owner/base");
 it.todo("_extends: base:test.yml");
 
