@@ -6,9 +6,9 @@
 [![Build Status](https://github.com/probot/octokit-plugin-config/workflows/Test/badge.svg)](https://github.com/probot/octokit-plugin-config/actions?query=workflow%3ATest+branch%3Amain)
 [![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=probot/octokit-plugin-config)](https://dependabot.com/)
 
-By default, this plugin loads configuration from `/.github/[filename]` in the provided repository. If the file doesn't exist, it loads configuration from the same path in the same owner's `.github` repository.
+By default, this plugin loads configuration from a given repository file. If the file doesn't exist, it loads configuration from the same path in the same owner's `.github` repository.
 
-Configuration can be loaded from multiple files by utilizing [the `_extends` key](#extends).
+Configuration can be extended across multiple files using [the `_extends` key](#extends).
 
 ## Usage
 
@@ -55,7 +55,7 @@ const { config } = require("@probot/octokit-plugin-config");
 const { config } = await octokit.config.get({
   owner: "octocat",
   repo: "hello-world",
-  filename: "my-app.yml",
+  path: ".github/my-app.yml",
 });
 // config is now { comment: "Thank you for creating the issue!" }
 
@@ -63,11 +63,10 @@ const { config } = await octokit.config.get({
 const { config, files } = await octokit.config.get({
   owner: "octocat",
   repo: "hello-world",
-  filename: "my-app.yml",
+  path: ".github/my-app.yml",
   defaults: {
     comment: "Thank you for creating the issue!",
   },
-  path: "",
   branch: "develop",
 });
 // files is an array of { owner, repo, path, config } objects
@@ -105,10 +104,10 @@ const { config, files } = await octokit.config.get({
       </td>
     </tr>
     <tr>
-      <th><code>filename</code></th>
+      <th><code>path</code></th>
       <td>String</td>
       <td>
-        <strong>Required.</strong> Name of the configuration file. Supported file extensions are <code>.yml</code>, <code>.yaml</code>, and <code>.json</code>.
+        <strong>Required.</strong> Path of the configuration file. Supported file extensions are <code>.yml</code>, <code>.yaml</code>, and <code>.json</code>.
       </td>
     </tr>
     <tr>
@@ -116,13 +115,6 @@ const { config, files } = await octokit.config.get({
       <td>String</td>
       <td>
         Default options that are returned if the configuration file does not exist, or merged with the contents if it does exist. Defaults are merged using shallowly using <code>Object.assign</code>. For custom merge strategies, you can set <code>defaults</code> to a function, see <a href="#custom-configuration-merging">Merging configuration</a> below for more information. Defaults to <code>{}</code>.
-      </td>
-    </tr>
-    <tr>
-      <th><code>path</code></th>
-      <td>String</td>
-      <td>
-        Defaults to <code>.github/</code>
       </td>
     </tr>
     <tr>
@@ -191,7 +183,7 @@ And
 const { config } = await octokit.config.get({
   owner,
   repo,
-  filename: "test.yml",
+  path: ".github/test.yml",
   defaults: {
     settings: {
       one: "default value",
@@ -236,7 +228,7 @@ const defaults = {
 const { config } = await octokit.config.get({
   owner,
   repo,
-  filename: "test.yml",
+  path: ".github/test.yml",
   defaults(configs) {
     const allConfigs = [defaults, ...configs];
     const fileSettingsConfigs = allConfigs.map(
@@ -255,7 +247,7 @@ Or simpler, using a library such as [deepmerge](https://github.com/TehShrike/dee
 const { config } = await octokit.config.get({
   owner,
   repo,
-  filename: "test.yml",
+  path: ".github/test.yml",
   defaults: (configs) => deepmerge([defaults, ...configs]),
 });
 ```
