@@ -1,7 +1,7 @@
 import { Octokit } from "@octokit/core";
 import yaml from "js-yaml";
 
-import type { Configuration, File } from "../types";
+import type { Configuration, ConfigFile } from "../types";
 
 type Options = {
   owner: string;
@@ -21,7 +21,7 @@ const SUPPORTED_FILE_EXTENSIONS = ["json", "yml", "yaml"];
 export async function getConfigFile(
   octokit: Octokit,
   { owner, repo, path, ref }: Options
-): Promise<File> {
+): Promise<ConfigFile> {
   const fileExtension = path.split(".").pop()?.toLowerCase() as string;
 
   if (!SUPPORTED_FILE_EXTENSIONS.includes(fileExtension)) {
@@ -40,9 +40,17 @@ export async function getConfigFile(
       mediaType: {
         format: "raw",
       },
+      // this can be just `ref` once https://github.com/octokit/endpoint.js/issues/206 is resolved
       ...(ref ? { ref } : {}),
     }
   );
+  const emptyConfigResult = {
+    owner,
+    repo,
+    path,
+    url: requestOptions.url,
+    config: null,
+  };
 
   try {
     const { data, headers } = await octokit.request(requestOptions);
@@ -69,10 +77,7 @@ export async function getConfigFile(
       }
 
       return {
-        owner,
-        repo,
-        path,
-        url: requestOptions.url,
+        ...emptyConfigResult,
         config: data,
       };
     }
@@ -86,21 +91,12 @@ export async function getConfigFile(
     }
 
     return {
-      owner,
-      repo,
-      path,
-      url: requestOptions.url,
+      ...emptyConfigResult,
       config,
     };
   } catch (error) {
     if (error.status === 404) {
-      return {
-        owner,
-        repo,
-        path,
-        url: requestOptions.url,
-        config: null,
-      };
+      return emptyConfigResult;
     }
 
     if (error.name === "YAMLException") {

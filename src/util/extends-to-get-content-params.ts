@@ -15,14 +15,13 @@ const EXTENDS_REGEX = new RegExp(
 );
 
 /**
- * Computes parameters for the repository specified in base
+ * Computes parameters to retrieve the configuration file specified in _extends
  *
  * Base can either be the name of a repository in the same organization or
  * a full slug "organization/repo".
  *
- * @param params An object containing owner, repo and path
- * @param base A string specifying the base repository
- * @return The params of the base configuration
+ * @param options
+ * @return The params needed to retrieve a configuration file
  */
 export function extendsToGetContentParams({
   owner,

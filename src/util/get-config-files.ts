@@ -1,6 +1,6 @@
 import { Octokit } from "@octokit/core";
 
-import type { File } from "../types";
+import type { ConfigFile } from "../types";
 import { getConfigFile } from "./get-config-file";
 import { extendsToGetContentParams } from "./extends-to-get-content-params";
 
@@ -24,7 +24,7 @@ type Options = {
 export async function getConfigFiles(
   octokit: Octokit,
   { owner, repo, path, branch }: Options
-): Promise<File[]> {
+): Promise<ConfigFile[]> {
   const requestedRepoFile = await getConfigFile(octokit, {
     owner,
     repo,

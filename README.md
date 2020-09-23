@@ -25,7 +25,10 @@ Load `@probot/octokit-plugin-config` and [`@octokit/core`](https://github.com/oc
 ```html
 <script type="module">
   import { Octokit } from "https://cdn.pika.dev/@octokit/core";
-  import { config } from "https://cdn.pika.dev/@probot/octokit-plugin-config";
+  import {
+    config,
+    composeConfigGet,
+  } from "https://cdn.pika.dev/@probot/octokit-plugin-config";
 </script>
 ```
 
@@ -40,7 +43,7 @@ Install with `npm install @octokit/core @probot/octokit-plugin-config`. Optional
 
 ```js
 const { Octokit } = require("@octokit/core");
-const { config } = require("@probot/octokit-plugin-config");
+const { config, composeConfigGet } = require("@probot/octokit-plugin-config");
 ```
 
 </td></tr>
