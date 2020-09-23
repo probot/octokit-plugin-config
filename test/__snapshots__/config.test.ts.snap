@@ -327,30 +327,6 @@ Object {
 }
 `;
 
-exports[`octokit.config.get defaults option when no config present: result 1`] = `
-Object {
-  "config": Object {
-    "comment": "Thank you for creating the issue!",
-  },
-  "files": Array [
-    Object {
-      "config": null,
-      "owner": "octocat",
-      "path": ".github/my-app.yml",
-      "repo": "hello-world",
-      "url": "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
-    },
-    Object {
-      "config": null,
-      "owner": "octocat",
-      "path": ".github/my-app.yml",
-      "repo": ".github",
-      "url": "https://api.github.com/repos/octocat/.github/contents/.github%2Fmy-app.yml",
-    },
-  ],
-}
-`;
-
 exports[`octokit.config.get merges deeply using defaults function: result 1`] = `
 Object {
   "config": Object {
@@ -429,6 +405,30 @@ exports[`octokit.config.get repo is .github: result 1`] = `
 Object {
   "config": Object {},
   "files": Array [
+    Object {
+      "config": null,
+      "owner": "octocat",
+      "path": ".github/my-app.yml",
+      "repo": ".github",
+      "url": "https://api.github.com/repos/octocat/.github/contents/.github%2Fmy-app.yml",
+    },
+  ],
+}
+`;
+
+exports[`octokit.config.get returns defaults option when no config files exist: result 1`] = `
+Object {
+  "config": Object {
+    "comment": "Thank you for creating the issue!",
+  },
+  "files": Array [
+    Object {
+      "config": null,
+      "owner": "octocat",
+      "path": ".github/my-app.yml",
+      "repo": "hello-world",
+      "url": "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
+    },
     Object {
       "config": null,
       "owner": "octocat",

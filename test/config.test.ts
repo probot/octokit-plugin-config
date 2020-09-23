@@ -89,7 +89,7 @@ describe("octokit.config.get", () => {
     expect(mock.done()).toBe(true);
   });
 
-  it("defaults option when no config present", async () => {
+  it("returns defaults option when no config files exist", async () => {
     const mock = fetchMock
       .sandbox()
       .getOnce(
