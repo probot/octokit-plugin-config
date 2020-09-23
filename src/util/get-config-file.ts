@@ -22,7 +22,7 @@ export async function getConfigFile(
   octokit: Octokit,
   { owner, repo, path, ref }: Options
 ): Promise<ConfigFile> {
-  const fileExtension = path.split(".").pop()?.toLowerCase() as string;
+  const fileExtension = (path.split(".").pop() as string).toLowerCase();
 
   if (!SUPPORTED_FILE_EXTENSIONS.includes(fileExtension)) {
     throw new Error(
