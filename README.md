@@ -59,17 +59,6 @@ const { config } = await octokit.config.get({
 });
 // config is now { comment: "Thank you for creating the issue!" }
 
-// create or update a configuration
-const { config } = await octokit.config.set({
-  owner: "octocat",
-  repo: "hello-world",
-  filename: "my-app.yml",
-  // can be either an object or a string
-  content: {
-    comment: "Welcome to octokit/hello-world!",
-  },
-});
-
 // all options and returns
 const { config, files } = await octokit.config.get({
   owner: "octocat",
