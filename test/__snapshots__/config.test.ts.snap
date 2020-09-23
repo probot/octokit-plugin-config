@@ -401,6 +401,25 @@ Object {
 }
 `;
 
+exports[`octokit.config.get path option: result 1`] = `
+Object {
+  "config": Object {
+    "comment": "Thank you for creating the issue!",
+  },
+  "files": Array [
+    Object {
+      "config": Object {
+        "comment": "Thank you for creating the issue!",
+      },
+      "owner": "octocat",
+      "path": "my-app.yml",
+      "repo": "hello-world",
+      "url": "https://api.github.com/repos/octocat/hello-world/contents/my-app.yml",
+    },
+  ],
+}
+`;
+
 exports[`octokit.config.get repo is .github: result 1`] = `
 Object {
   "config": Object {},

@@ -12,6 +12,7 @@ type GetOptions<T> = {
   repo: string;
   filename: string;
   defaults?: T | defaultsFunction<T>;
+  path?: string;
 };
 
 type GetResult<T> = {
@@ -30,11 +31,13 @@ export function config(octokit: Octokit) {
         repo,
         filename,
         defaults,
+        path,
       }: GetOptions<T>): Promise<GetResult<T>> {
         const files = await getConfigFiles(octokit, {
           owner,
           repo,
           filename,
+          path,
         });
 
         const configs = files
