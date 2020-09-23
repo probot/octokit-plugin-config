@@ -2,6 +2,7 @@ import { Octokit } from "@octokit/core";
 
 import type { File } from "../types";
 import { getConfigFile } from "./get-config-file";
+import { extendsToGetContentParams } from "./extends-to-get-content-params";
 
 type GetOptions = {
   owner: string;
@@ -31,6 +32,8 @@ export async function getConfigFiles(
     path,
   });
 
+  // if no configuration file present in selected repository,
+  // try to load it from the `.github` repository
   if (!requestedRepoFile.config) {
     if (repo === ".github") {
       return [requestedRepoFile];
@@ -45,36 +48,54 @@ export async function getConfigFiles(
     return [requestedRepoFile, defaultRepoConfig];
   }
 
+  // if the configuration has no `_extends` key, we are done here.
   if (!requestedRepoFile.config._extends) {
     return [requestedRepoFile];
   }
 
-  let extendRepoName: string = requestedRepoFile.config._extends as string;
+  // parse the value of `_extends` into request parameters to
+  // retrieve the new configuration file
+  let extendConfigOptions = extendsToGetContentParams({
+    owner,
+    path,
+    url: requestedRepoFile.url,
+    extendsValue: requestedRepoFile.config._extends as string,
+  });
+
+  // remove the `_extends` key from the configuration that is returned
   delete requestedRepoFile.config._extends;
   const files = [requestedRepoFile];
 
+  // now load the configuration linked from the `_extends` key. If that
+  // configuration also includes an `_extends` key, then load that configuration
+  // as well, until the target configuration has no `_extends` key
   do {
-    const extendRepoConfig = await getConfigFile(octokit, {
-      owner,
-      repo: extendRepoName,
-      path,
-    });
-    if (extendRepoConfig.config) {
-      extendRepoName = extendRepoConfig.config._extends as string;
-      delete extendRepoConfig.config._extends;
-    } else {
-      extendRepoName = "";
+    const extendRepoConfig = await getConfigFile(octokit, extendConfigOptions);
+    files.push(extendRepoConfig);
+    if (!extendRepoConfig.config || !extendRepoConfig.config._extends) {
+      return files;
     }
 
-    files.push(extendRepoConfig);
+    extendConfigOptions = extendsToGetContentParams({
+      owner,
+      path,
+      url: extendRepoConfig.url,
+      extendsValue: extendRepoConfig.config._extends as string,
+    });
+    delete extendRepoConfig.config._extends;
 
-    const alreadyLoaded = files.find((file) => file.repo === extendRepoName);
+    // Avoid loops
+    const alreadyLoaded = files.find(
+      (file) =>
+        file.owner === extendConfigOptions.owner &&
+        file.repo === extendConfigOptions.repo &&
+        file.path === extendConfigOptions.path
+    );
+
     if (alreadyLoaded) {
       throw new Error(
-        `[@probot/octokit-plugin-config] Recursion detected. Ignoring  "_extends: ${extendRepoName}" from ${extendRepoConfig.url} because ${alreadyLoaded.url} was already loaded.`
+        `[@probot/octokit-plugin-config] Recursion detected. Ignoring  "_extends: ${extendRepoConfig.config._extends}" from ${extendRepoConfig.url} because ${alreadyLoaded.url} was already loaded.`
       );
     }
-  } while (extendRepoName);
-
-  return files;
+  } while (true);
 }

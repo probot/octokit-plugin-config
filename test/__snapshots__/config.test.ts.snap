@@ -64,6 +64,96 @@ Object {
 }
 `;
 
+exports[`_extends: base:test.yml: result 1`] = `
+Object {
+  "config": Object {
+    "setting1": "value from repo config file",
+    "setting2": "value from base config file",
+  },
+  "files": Array [
+    Object {
+      "config": Object {
+        "setting1": "value from repo config file",
+      },
+      "owner": "octocat",
+      "path": ".github/my-app.yml",
+      "repo": "hello-world",
+      "url": "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
+    },
+    Object {
+      "config": Object {
+        "setting1": "value from base config file",
+        "setting2": "value from base config file",
+      },
+      "owner": "octocat",
+      "path": "test.yml",
+      "repo": "base",
+      "url": "https://api.github.com/repos/octocat/base/contents/test.yml",
+    },
+  ],
+}
+`;
+
+exports[`_extends: other-owner/base: result 1`] = `
+Object {
+  "config": Object {
+    "setting1": "value from repo config file",
+    "setting2": "value from base config file",
+  },
+  "files": Array [
+    Object {
+      "config": Object {
+        "setting1": "value from repo config file",
+      },
+      "owner": "octocat",
+      "path": ".github/my-app.yml",
+      "repo": "hello-world",
+      "url": "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
+    },
+    Object {
+      "config": Object {
+        "setting1": "value from base config file",
+        "setting2": "value from base config file",
+      },
+      "owner": "other-owner",
+      "path": ".github/my-app.yml",
+      "repo": "base",
+      "url": "https://api.github.com/repos/other-owner/base/contents/.github%2Fmy-app.yml",
+    },
+  ],
+}
+`;
+
+exports[`_extends: other-owner/base:test.yml: result 1`] = `
+Object {
+  "config": Object {
+    "setting1": "value from repo config file",
+    "setting2": "value from base config file",
+  },
+  "files": Array [
+    Object {
+      "config": Object {
+        "setting1": "value from repo config file",
+      },
+      "owner": "octocat",
+      "path": ".github/my-app.yml",
+      "repo": "hello-world",
+      "url": "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
+    },
+    Object {
+      "config": Object {
+        "setting1": "value from base config file",
+        "setting2": "value from base config file",
+      },
+      "owner": "other-owner",
+      "path": "test.yml",
+      "repo": "base",
+      "url": "https://api.github.com/repos/other-owner/base/contents/test.yml",
+    },
+  ],
+}
+`;
+
 exports[`config file is empty: result 1`] = `
 Object {
   "config": Object {},
@@ -74,6 +164,48 @@ Object {
       "path": ".github/my-app.yml",
       "repo": "hello-world",
       "url": "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
+    },
+  ],
+}
+`;
+
+exports[`octokit.config.get _extends: base -> _extends: base2: result 1`] = `
+Object {
+  "config": Object {
+    "setting1": "value from repo config file",
+    "setting2": "value from base1 config file",
+    "setting3": "value from base2 config file",
+  },
+  "files": Array [
+    Object {
+      "config": Object {
+        "setting1": "value from repo config file",
+      },
+      "owner": "octocat",
+      "path": ".github/my-app.yml",
+      "repo": "hello-world",
+      "url": "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
+    },
+    Object {
+      "config": Object {
+        "setting1": "value from base1 config file",
+        "setting2": "value from base1 config file",
+      },
+      "owner": "octocat",
+      "path": ".github/my-app.yml",
+      "repo": "base",
+      "url": "https://api.github.com/repos/octocat/base/contents/.github%2Fmy-app.yml",
+    },
+    Object {
+      "config": Object {
+        "setting1": "value from base2 config file",
+        "setting2": "value from base2 config file",
+        "setting3": "value from base2 config file",
+      },
+      "owner": "octocat",
+      "path": ".github/my-app.yml",
+      "repo": "base2",
+      "url": "https://api.github.com/repos/octocat/base2/contents/.github%2Fmy-app.yml",
     },
   ],
 }

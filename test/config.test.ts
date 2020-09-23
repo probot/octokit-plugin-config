@@ -245,6 +245,45 @@ describe("octokit.config.get", () => {
     expect(mock.done()).toBe(true);
   });
 
+  it("_extends: base -> _extends: base2", async () => {
+    const mock = fetchMock
+      .sandbox()
+      .getOnce(
+        "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
+        stripIndent(`
+        setting1: value from repo config file
+        _extends: base`)
+      )
+      .getOnce(
+        "https://api.github.com/repos/octocat/base/contents/.github%2Fmy-app.yml",
+        stripIndent(`
+        setting1: value from base1 config file
+        setting2: value from base1 config file
+        _extends: base2`)
+      )
+      .getOnce(
+        "https://api.github.com/repos/octocat/base2/contents/.github%2Fmy-app.yml",
+        stripIndent(`
+        setting1: value from base2 config file
+        setting2: value from base2 config file
+        setting3: value from base2 config file`)
+      );
+
+    const octokit = new TestOctokit({
+      request: {
+        fetch: mock,
+      },
+    });
+    const result = await octokit.config.get({
+      owner: "octocat",
+      repo: "hello-world",
+      filename: "my-app.yml",
+    });
+
+    expect(result).toMatchSnapshot("result");
+    expect(mock.done()).toBe(true);
+  });
+
   it("_extends: base with defaults and custom merge", async () => {
     const mock = fetchMock
       .sandbox()
@@ -474,7 +513,7 @@ it("recursion", async () => {
     });
   } catch (error) {
     expect(error.message).toMatchInlineSnapshot(
-      `"[@probot/octokit-plugin-config] Recursion detected. Ignoring  \\"_extends: hello-world\\" from https://api.github.com/repos/octocat/base/contents/.github%2Fmy-app.yml because https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml was already loaded."`
+      `"[@probot/octokit-plugin-config] Recursion detected. Ignoring  \\"_extends: undefined\\" from https://api.github.com/repos/octocat/base/contents/.github%2Fmy-app.yml because https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml was already loaded."`
     );
   }
 
@@ -692,8 +731,165 @@ it("unsafe yaml", async () => {
   expect(mock.done()).toBe(true);
 });
 
-it.todo("_extends: other-owner/base");
-it.todo("_extends: base:test.yml");
+it("_extends: other-owner/base", async () => {
+  const mock = fetchMock
+    .sandbox()
+    .getOnce(
+      "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
+      stripIndent(`
+        setting1: value from repo config file
+        _extends: other-owner/base
+      `)
+    )
+    .getOnce(
+      "https://api.github.com/repos/other-owner/base/contents/.github%2Fmy-app.yml",
+      stripIndent(`
+        setting1: value from base config file
+        setting2: value from base config file
+      `)
+    );
 
-it.todo("_extends: { nope }");
-it.todo("_extends: 'nope!'");
+  const octokit = new TestOctokit({
+    request: {
+      fetch: mock,
+    },
+  });
+  const result = await octokit.config.get({
+    owner: "octocat",
+    repo: "hello-world",
+    filename: "my-app.yml",
+  });
+
+  expect(result).toMatchSnapshot("result");
+  expect(mock.done()).toBe(true);
+});
+
+it("_extends: base:test.yml", async () => {
+  const mock = fetchMock
+    .sandbox()
+    .getOnce(
+      "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
+      stripIndent(`
+        setting1: value from repo config file
+        _extends: base:test.yml
+      `)
+    )
+    .getOnce(
+      "https://api.github.com/repos/octocat/base/contents/test.yml",
+      stripIndent(`
+        setting1: value from base config file
+        setting2: value from base config file
+      `)
+    );
+
+  const octokit = new TestOctokit({
+    request: {
+      fetch: mock,
+    },
+  });
+  const result = await octokit.config.get({
+    owner: "octocat",
+    repo: "hello-world",
+    filename: "my-app.yml",
+  });
+
+  expect(result).toMatchSnapshot("result");
+  expect(mock.done()).toBe(true);
+});
+
+it("_extends: other-owner/base:test.yml", async () => {
+  const mock = fetchMock
+    .sandbox()
+    .getOnce(
+      "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
+      stripIndent(`
+        setting1: value from repo config file
+        _extends: other-owner/base:test.yml
+      `)
+    )
+    .getOnce(
+      "https://api.github.com/repos/other-owner/base/contents/test.yml",
+      stripIndent(`
+        setting1: value from base config file
+        setting2: value from base config file
+      `)
+    );
+
+  const octokit = new TestOctokit({
+    request: {
+      fetch: mock,
+    },
+  });
+  const result = await octokit.config.get({
+    owner: "octocat",
+    repo: "hello-world",
+    filename: "my-app.yml",
+  });
+
+  expect(result).toMatchSnapshot("result");
+  expect(mock.done()).toBe(true);
+});
+
+it("_extends: invalid!", async () => {
+  expect.assertions(2);
+
+  const mock = fetchMock.sandbox().getOnce(
+    "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
+    stripIndent(`
+        setting1: value from repo config file
+        _extends: invalid!
+      `)
+  );
+
+  const octokit = new TestOctokit({
+    request: {
+      fetch: mock,
+    },
+  });
+
+  try {
+    await octokit.config.get({
+      owner: "octocat",
+      repo: "hello-world",
+      filename: "my-app.yml",
+    });
+  } catch (error) {
+    expect(error.message).toMatchInlineSnapshot(
+      `"[@probot/octokit-plugin-config] Invalid value \\"invalid!\\" for _extends in https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml"`
+    );
+  }
+
+  expect(mock.done()).toBe(true);
+});
+
+it("_extends: { nope }", async () => {
+  expect.assertions(2);
+
+  const mock = fetchMock.sandbox().getOnce(
+    "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
+    stripIndent(`
+        setting1: value from repo config file
+        _extends: { nope }
+      `)
+  );
+
+  const octokit = new TestOctokit({
+    request: {
+      fetch: mock,
+    },
+  });
+
+  try {
+    await octokit.config.get({
+      owner: "octocat",
+      repo: "hello-world",
+      filename: "my-app.yml",
+    });
+  } catch (error) {
+    expect(error.message).toMatchInlineSnapshot(
+      `"[@probot/octokit-plugin-config] Invalid value {\\"nope\\":null} for _extends in https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml"`
+    );
+  }
+
+  expect(mock.done()).toBe(true);
+});
