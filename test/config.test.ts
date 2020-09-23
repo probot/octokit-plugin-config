@@ -294,6 +294,8 @@ describe("octokit.config.get", () => {
 });
 
 it("config file is a submodule", async () => {
+  expect.assertions(2);
+
   const mock = fetchMock
     .sandbox()
     .getOnce(
@@ -304,34 +306,26 @@ it("config file is a submodule", async () => {
           "content-type": "application/json; charset=utf-8",
         },
       }
-    )
-    .getOnce(
-      "https://api.github.com/repos/octocat/.github/contents/.github%2Fmy-app.yml",
-      NOT_FOUND_RESPONSE
     );
 
-  const log = {
-    debug: jest.fn(),
-    info: jest.fn(),
-    warn: jest.fn(),
-    error: jest.fn(),
-  };
-
   const octokit = new TestOctokit({
-    log,
     request: {
       fetch: mock,
     },
   });
 
-  const result = await octokit.config.get({
-    owner: "octocat",
-    repo: "hello-world",
-    filename: "my-app.yml",
-  });
+  try {
+    await octokit.config.get({
+      owner: "octocat",
+      repo: "hello-world",
+      filename: "my-app.yml",
+    });
+  } catch (error) {
+    expect(error.message).toMatchInlineSnapshot(
+      `"[@probot/octokit-plugin-config] https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml exists, but is either a directory or a submodule. Ignoring."`
+    );
+  }
 
-  expect(result).toMatchSnapshot("result");
-  expect(log).toMatchSnapshot("log");
   expect(mock.done()).toBe(true);
 });
 
@@ -444,6 +438,8 @@ it("request error", async () => {
 });
 
 it("recursion", async () => {
+  expect.assertions(2);
+
   const mock = fetchMock
     .sandbox()
     .getOnce(
@@ -465,26 +461,23 @@ it("recursion", async () => {
         _extends: hello-world`)
     );
 
-  const log = {
-    debug: jest.fn(),
-    info: jest.fn(),
-    warn: jest.fn(),
-    error: jest.fn(),
-  };
   const octokit = new TestOctokit({
-    log,
     request: {
       fetch: mock,
     },
   });
-  const result = await octokit.config.get({
-    owner: "octocat",
-    repo: "hello-world",
-    filename: "my-app.yml",
-  });
+  try {
+    await octokit.config.get({
+      owner: "octocat",
+      repo: "hello-world",
+      filename: "my-app.yml",
+    });
+  } catch (error) {
+    expect(error.message).toMatchInlineSnapshot(
+      `"[@probot/octokit-plugin-config] Recursion detected. Ignoring  \\"_extends: hello-world\\" from https://api.github.com/repos/octocat/base/contents/.github%2Fmy-app.yml because https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml was already loaded."`
+    );
+  }
 
-  expect(result).toMatchSnapshot("result");
-  expect(log).toMatchSnapshot("log");
   expect(mock.done()).toBe(true);
 });
 

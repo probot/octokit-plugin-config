@@ -54,17 +54,9 @@ export async function getConfigFile(
     // symlinks just return the content of the linked file when requesting the raw formt,
     // so we are fine
     if (headers["content-type"] === "application/json; charset=utf-8") {
-      octokit.log.warn(
+      throw new Error(
         `[@probot/octokit-plugin-config] ${requestOptions.url} exists, but is either a directory or a submodule. Ignoring.`
       );
-
-      return {
-        owner,
-        repo,
-        path,
-        url: requestOptions.url,
-        config: null,
-      };
     }
 
     if (fileExtension === "json") {

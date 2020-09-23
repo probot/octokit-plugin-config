@@ -70,10 +70,9 @@ export async function getConfigFiles(
 
     const alreadyLoaded = files.find((file) => file.repo === extendRepoName);
     if (alreadyLoaded) {
-      octokit.log.warn(
+      throw new Error(
         `[@probot/octokit-plugin-config] Recursion detected. Ignoring  "_extends: ${extendRepoName}" from ${extendRepoConfig.url} because ${alreadyLoaded.url} was already loaded.`
       );
-      extendRepoName = "";
     }
   } while (extendRepoName);
 

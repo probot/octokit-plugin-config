@@ -64,49 +64,6 @@ Object {
 }
 `;
 
-exports[`config file is a submodule: log 1`] = `
-Object {
-  "debug": [MockFunction],
-  "error": [MockFunction],
-  "info": [MockFunction],
-  "warn": [MockFunction] {
-    "calls": Array [
-      Array [
-        "[@probot/octokit-plugin-config] https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml exists, but is either a directory or a submodule. Ignoring.",
-      ],
-    ],
-    "results": Array [
-      Object {
-        "type": "return",
-        "value": undefined,
-      },
-    ],
-  },
-}
-`;
-
-exports[`config file is a submodule: result 1`] = `
-Object {
-  "config": Object {},
-  "files": Array [
-    Object {
-      "config": null,
-      "owner": "octocat",
-      "path": ".github/my-app.yml",
-      "repo": "hello-world",
-      "url": "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
-    },
-    Object {
-      "config": null,
-      "owner": "octocat",
-      "path": ".github/my-app.yml",
-      "repo": ".github",
-      "url": "https://api.github.com/repos/octocat/.github/contents/.github%2Fmy-app.yml",
-    },
-  ],
-}
-`;
-
 exports[`config file is empty: result 1`] = `
 Object {
   "config": Object {},
@@ -331,67 +288,6 @@ Object {
       "path": ".github/my-app.yml",
       "repo": "hello-world",
       "url": "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
-    },
-  ],
-}
-`;
-
-exports[`recursion: log 1`] = `
-Object {
-  "debug": [MockFunction],
-  "error": [MockFunction],
-  "info": [MockFunction],
-  "warn": [MockFunction] {
-    "calls": Array [
-      Array [
-        "[@probot/octokit-plugin-config] Recursion detected. Ignoring  \\"_extends: hello-world\\" from https://api.github.com/repos/octocat/base/contents/.github%2Fmy-app.yml because https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml was already loaded.",
-      ],
-    ],
-    "results": Array [
-      Object {
-        "type": "return",
-        "value": undefined,
-      },
-    ],
-  },
-}
-`;
-
-exports[`recursion: result 1`] = `
-Object {
-  "config": Object {
-    "otherSetting1": "value from repo config file",
-    "otherSetting2": "value from base config file",
-    "settings": Object {
-      "one": "value from repo config file",
-    },
-  },
-  "files": Array [
-    Object {
-      "config": Object {
-        "otherSetting1": "value from repo config file",
-        "settings": Object {
-          "one": "value from repo config file",
-        },
-      },
-      "owner": "octocat",
-      "path": ".github/my-app.yml",
-      "repo": "hello-world",
-      "url": "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
-    },
-    Object {
-      "config": Object {
-        "otherSetting1": "value from base config file",
-        "otherSetting2": "value from base config file",
-        "settings": Object {
-          "one": "value from base config file",
-          "two": "value from base config file",
-        },
-      },
-      "owner": "octocat",
-      "path": ".github/my-app.yml",
-      "repo": "base",
-      "url": "https://api.github.com/repos/octocat/base/contents/.github%2Fmy-app.yml",
     },
   ],
 }
