@@ -1,5 +1,3 @@
-import { join } from "path";
-
 import { Octokit } from "@octokit/core";
 
 import type { File } from "../types";
@@ -9,8 +7,7 @@ import { extendsToGetContentParams } from "./extends-to-get-content-params";
 type Options = {
   owner: string;
   repo: string;
-  filename: string;
-  path?: string;
+  path: string;
   branch?: string;
 };
 
@@ -26,14 +23,12 @@ type Options = {
  */
 export async function getConfigFiles(
   octokit: Octokit,
-  { owner, repo, filename, path = ".github/", branch }: Options
+  { owner, repo, path, branch }: Options
 ): Promise<File[]> {
-  const fullPath = join(path, filename);
-
   const requestedRepoFile = await getConfigFile(octokit, {
     owner,
     repo,
-    path: fullPath,
+    path,
     ref: branch,
   });
 
@@ -47,7 +42,7 @@ export async function getConfigFiles(
     const defaultRepoConfig = await getConfigFile(octokit, {
       owner,
       repo: ".github",
-      path: fullPath,
+      path,
     });
 
     return [requestedRepoFile, defaultRepoConfig];
@@ -62,7 +57,7 @@ export async function getConfigFiles(
   // retrieve the new configuration file
   let extendConfigOptions = extendsToGetContentParams({
     owner,
-    path: fullPath,
+    path,
     url: requestedRepoFile.url,
     extendsValue: requestedRepoFile.config._extends as string,
   });
@@ -83,7 +78,7 @@ export async function getConfigFiles(
 
     extendConfigOptions = extendsToGetContentParams({
       owner,
-      path: fullPath,
+      path,
       url: extendRepoConfig.url,
       extendsValue: extendRepoConfig.config._extends as string,
     });

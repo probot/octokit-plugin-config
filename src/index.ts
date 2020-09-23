@@ -10,9 +10,8 @@ type defaultsFunction<T> = (files: Configuration[]) => T;
 type GetOptions<T> = {
   owner: string;
   repo: string;
-  filename: string;
+  path: string;
   defaults?: T | defaultsFunction<T>;
-  path?: string;
   branch?: string;
 };
 
@@ -30,7 +29,6 @@ export function config(octokit: Octokit) {
       async get<T extends Configuration = Configuration>({
         owner,
         repo,
-        filename,
         defaults,
         path,
         branch,
@@ -38,7 +36,6 @@ export function config(octokit: Octokit) {
         const files = await getConfigFiles(octokit, {
           owner,
           repo,
-          filename,
           path,
           branch,
         });

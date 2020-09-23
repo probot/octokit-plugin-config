@@ -51,7 +51,7 @@ describe("octokit.config.get", () => {
     const result = await octokit.config.get({
       owner: "octocat",
       repo: "hello-world",
-      filename: "my-app.yml",
+      path: ".github/my-app.yml",
     });
 
     expect(result).toMatchSnapshot("result");
@@ -79,7 +79,7 @@ describe("octokit.config.get", () => {
     const result = await octokit.config.get({
       owner: "octocat",
       repo: "hello-world",
-      filename: "my-app.yml",
+      path: ".github/my-app.yml",
       defaults: {
         comment: "Thank you for creating the issue!",
       },
@@ -110,7 +110,7 @@ describe("octokit.config.get", () => {
     const result = await octokit.config.get({
       owner: "octocat",
       repo: "hello-world",
-      filename: "my-app.yml",
+      path: ".github/my-app.yml",
       defaults: {
         comment: "Thank you for creating the issue!",
       },
@@ -137,7 +137,7 @@ describe("octokit.config.get", () => {
     const result = await octokit.config.get({
       owner: "octocat",
       repo: "hello-world",
-      filename: "my-app.yml",
+      path: ".github/my-app.yml",
       defaults: {
         config: "default value",
         otherConfig: "default value",
@@ -169,7 +169,7 @@ describe("octokit.config.get", () => {
     const result = await octokit.config.get({
       owner: "octocat",
       repo: "hello-world",
-      filename: "my-app.yml",
+      path: ".github/my-app.yml",
       defaults: {
         config: "default value",
         otherConfig: "default value",
@@ -206,37 +206,8 @@ describe("octokit.config.get", () => {
     const result = await octokit.config.get<typeof defaults>({
       owner: "octocat",
       repo: "hello-world",
-      filename: "my-app.yml",
+      path: ".github/my-app.yml",
       defaults: (configs) => deepMergeSettings(defaults, configs),
-    });
-
-    expect(result).toMatchSnapshot("result");
-    expect(mock.done()).toBe(true);
-  });
-
-  it("path option", async () => {
-    const mock = fetchMock
-      .sandbox()
-      .getOnce(
-        "https://api.github.com/repos/octocat/hello-world/contents/my-app.yml",
-        `comment: 'Thank you for creating the issue!'`,
-        {
-          headers: {
-            accept: "application/vnd.github.v3.raw",
-          },
-        }
-      );
-    const octokit = new TestOctokit({
-      request: {
-        fetch: mock,
-      },
-    });
-
-    const result = await octokit.config.get({
-      owner: "octocat",
-      repo: "hello-world",
-      filename: "my-app.yml",
-      path: "",
     });
 
     expect(result).toMatchSnapshot("result");
@@ -264,7 +235,7 @@ describe("octokit.config.get", () => {
     const result = await octokit.config.get({
       owner: "octocat",
       repo: "hello-world",
-      filename: "my-app.yml",
+      path: ".github/my-app.yml",
       branch: "my-branch",
     });
 
@@ -296,7 +267,7 @@ describe("octokit.config.get", () => {
     const result = await octokit.config.get({
       owner: "octocat",
       repo: "hello-world",
-      filename: "my-app.yml",
+      path: ".github/my-app.yml",
     });
 
     expect(result).toMatchSnapshot("result");
@@ -335,7 +306,7 @@ describe("octokit.config.get", () => {
     const result = await octokit.config.get({
       owner: "octocat",
       repo: "hello-world",
-      filename: "my-app.yml",
+      path: ".github/my-app.yml",
     });
 
     expect(result).toMatchSnapshot("result");
@@ -381,7 +352,7 @@ describe("octokit.config.get", () => {
     const result = await octokit.config.get({
       owner: "octocat",
       repo: "hello-world",
-      filename: "my-app.yml",
+      path: ".github/my-app.yml",
       defaults: (configs) => deepMergeSettings(defaults, configs),
     });
 
@@ -414,7 +385,7 @@ describe("octokit.config.get", () => {
       await octokit.config.get({
         owner: "octocat",
         repo: "hello-world",
-        filename: "my-app.yml",
+        path: ".github/my-app.yml",
       });
     } catch (error) {
       expect(error.message).toMatchInlineSnapshot(
@@ -442,7 +413,7 @@ describe("octokit.config.get", () => {
     const result = await octokit.config.get({
       owner: "octocat",
       repo: "hello-world",
-      filename: "my-app.yml",
+      path: ".github/my-app.yml",
     });
 
     expect(result).toMatchSnapshot("result");
@@ -466,7 +437,7 @@ describe("octokit.config.get", () => {
     const result = await octokit.config.get({
       owner: "octocat",
       repo: ".github",
-      filename: "my-app.yml",
+      path: ".github/my-app.yml",
     });
 
     expect(result).toMatchSnapshot("result");
@@ -495,7 +466,7 @@ describe("octokit.config.get", () => {
     const result = await octokit.config.get({
       owner: "octocat",
       repo: "hello-world",
-      filename: "my-app.yml",
+      path: ".github/my-app.yml",
     });
 
     expect(result).toMatchSnapshot("result");
@@ -524,7 +495,7 @@ describe("octokit.config.get", () => {
       await octokit.config.get({
         owner: "octocat",
         repo: "hello-world",
-        filename: "my-app.yml",
+        path: ".github/my-app.yml",
       });
     } catch (error) {
       expect(error.status).toEqual(500);
@@ -566,7 +537,7 @@ describe("octokit.config.get", () => {
       await octokit.config.get({
         owner: "octocat",
         repo: "hello-world",
-        filename: "my-app.yml",
+        path: ".github/my-app.yml",
       });
     } catch (error) {
       expect(error.message).toMatchInlineSnapshot(
@@ -598,7 +569,7 @@ describe("octokit.config.get", () => {
     const result = await octokit.config.get({
       owner: "octocat",
       repo: "hello-world",
-      filename: "my-app.yaml",
+      path: ".github/my-app.yaml",
     });
 
     expect(result).toMatchSnapshot("result");
@@ -624,7 +595,7 @@ describe("octokit.config.get", () => {
     const result = await octokit.config.get({
       owner: "octocat",
       repo: "hello-world",
-      filename: "my-app.json",
+      path: ".github/my-app.json",
     });
 
     expect(result).toMatchSnapshot("result");
@@ -640,7 +611,7 @@ describe("octokit.config.get", () => {
       await octokit.config.get({
         owner: "octocat",
         repo: "hello-world",
-        filename: "my-app.unknown",
+        path: ".github/my-app.unknown",
       });
     } catch (error) {
       expect(error.message).toEqual(
@@ -673,7 +644,7 @@ describe("octokit.config.get", () => {
       await octokit.config.get({
         owner: "octocat",
         repo: "hello-world",
-        filename: "my-app.json",
+        path: ".github/my-app.json",
       });
     } catch (error) {
       expect(error.message).toMatchInlineSnapshot(
@@ -708,7 +679,7 @@ describe("octokit.config.get", () => {
       await octokit.config.get({
         owner: "octocat",
         repo: "hello-world",
-        filename: "my-app.yaml",
+        path: ".github/my-app.yaml",
       });
     } catch (error) {
       expect(error.message).toMatchInlineSnapshot(
@@ -743,7 +714,7 @@ describe("octokit.config.get", () => {
       await octokit.config.get({
         owner: "octocat",
         repo: "hello-world",
-        filename: "my-app.yaml",
+        path: ".github/my-app.yaml",
       });
     } catch (error) {
       expect(error.message).toMatchInlineSnapshot(
@@ -777,7 +748,7 @@ describe("octokit.config.get", () => {
       await octokit.config.get({
         owner: "octocat",
         repo: "hello-world",
-        filename: "my-app.yaml",
+        path: ".github/my-app.yaml",
       });
     } catch (error) {
       expect(error.message).toMatchInlineSnapshot(
@@ -814,7 +785,7 @@ describe("octokit.config.get", () => {
     const result = await octokit.config.get({
       owner: "octocat",
       repo: "hello-world",
-      filename: "my-app.yml",
+      path: ".github/my-app.yml",
     });
 
     expect(result).toMatchSnapshot("result");
@@ -847,7 +818,7 @@ describe("octokit.config.get", () => {
     const result = await octokit.config.get({
       owner: "octocat",
       repo: "hello-world",
-      filename: "my-app.yml",
+      path: ".github/my-app.yml",
     });
 
     expect(result).toMatchSnapshot("result");
@@ -880,7 +851,7 @@ describe("octokit.config.get", () => {
     const result = await octokit.config.get({
       owner: "octocat",
       repo: "hello-world",
-      filename: "my-app.yml",
+      path: ".github/my-app.yml",
     });
 
     expect(result).toMatchSnapshot("result");
@@ -908,7 +879,7 @@ describe("octokit.config.get", () => {
       await octokit.config.get({
         owner: "octocat",
         repo: "hello-world",
-        filename: "my-app.yml",
+        path: ".github/my-app.yml",
       });
     } catch (error) {
       expect(error.message).toMatchInlineSnapshot(
@@ -940,7 +911,7 @@ describe("octokit.config.get", () => {
       await octokit.config.get({
         owner: "octocat",
         repo: "hello-world",
-        filename: "my-app.yml",
+        path: ".github/my-app.yml",
       });
     } catch (error) {
       expect(error.message).toMatchInlineSnapshot(
