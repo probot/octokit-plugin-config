@@ -255,6 +255,122 @@ const { config } = await octokit.config.get({
 });
 ```
 
+## Testing
+
+Writing tests for your app's usage of `octokit.config.get` can be tricky. It's tempting to just mock the method directly, e.g. using [a Jest mock function](https://jestjs.io/docs/en/mock-functions)
+
+```js
+octokit.config.get = jest.fn().mockResolvedValue({
+  comment: "Thank you for creating the issue!",
+});
+```
+
+The problem with this approach is that in future releases of `@probot/octokit-plugin-config`, the method name or parameters might change. Before that happens, we will log a deprecation message, to make the upgrade to the next breaking version easier. If all your tests mock the `.config.get()` method, then you won't see this deprecation message. Even worse, your tests will continue to pass, but fail in production, because the mock will revert any future changes to `.config.get()`.
+
+We recommend you have at least one test that does not mock the method, but instead mocks the http responses. You can achiev that with [nock](https://github.com/nock/nock/) or [fetch-mock](https://github.com/wheresrhys/fetch-mock)
+
+### Testing with `nock`
+
+With configuration
+
+```js
+async function myTest() {
+  nock("https://api.github.com")
+    .get("/repos/octocat/hello-world/contents/.github%2Fmy-app.yml")
+    .reply(200, "comment: Thank you for creating the issue");
+
+  const octokit = new Octokit();
+
+  const { config } = await octokit.config.get({
+    owner: "octocat",
+    repo: "hello-world",
+    path: ".github/my-app.yml",
+  });
+
+  asert.deepStrictEqual(config, {
+    comment: "Thank you for creating the issue!",
+  });
+}
+```
+
+Without configuration
+
+```js
+async function myTest() {
+  nock("https://api.github.com")
+    .get("/repos/octocat/hello-world/contents/.github%2Fmy-app.yml")
+    .reply(404);
+    .get("/repos/octocat/.github/contents/.github%2Fmy-app.yml")
+    .reply(404);
+
+  const octokit = new Octokit();
+
+  const { config } = await octokit.config.get({
+    owner: "octocat",
+    repo: "hello-world",
+    path: ".github/my-app.yml",
+  });
+
+  asert.deepStrictEqual(config, {});
+}
+```
+
+### Testing with `fetch-mock`
+
+With configuration
+
+```js
+async function myTest() {
+  const fetch = fetchMock
+    .sandbox()
+    .getOnce(
+      "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
+      "comment: 'Thank you for creating the issue!'"
+    );
+  const octokit = new TestOctokit({
+    request: { fetch },
+  });
+
+  const { config } = await octokit.config.get({
+    owner: "octocat",
+    repo: "hello-world",
+    path: ".github/my-app.yml",
+  });
+
+  asert.deepStrictEqual(config, {
+    comment: "Thank you for creating the issue!",
+  });
+}
+```
+
+Without configuration
+
+```js
+async function myTest() {
+  const fetch = fetchMock
+    .sandbox()
+    .getOnce(
+      "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
+      404
+    );
+    .getOnce(
+      "https://api.github.com/repos/octocat/.github/contents/.github%2Fmy-app.yml",
+      404
+    );
+  const octokit = new TestOctokit({
+    request: { fetch },
+  });
+
+  const { config } = await octokit.config.get({
+    owner: "octocat",
+    repo: "hello-world",
+    path: ".github/my-app.yml",
+  });
+
+  asert.deepStrictEqual(config, {});
+}
+```
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md)
