@@ -117,7 +117,7 @@ const { config, files } = await octokit.config.get({
       <th><code>defaults</code></th>
       <td>String</td>
       <td>
-        Default options that are returned if the configuration file does not exist, or merged with the contents if it does exist. Defaults are merged using shallowly using <code>Object.assign</code>. For custom merge strategies, you can set <code>defaults</code> to a function, see <a href="#custom-configuration-merging">Merging configuration</a> below for more information. Defaults to <code>{}</code>.
+        Default options that are returned if the configuration file does not exist, or merged with the contents if it does exist. Defaults are merged shallowly using <code>Object.assign</code>. For custom merge strategies, you can set <code>defaults</code> to a function, see <a href="#custom-configuration-merging">Merging configuration</a> below for more information. Defaults to <code>{}</code>.
       </td>
     </tr>
     <tr>
