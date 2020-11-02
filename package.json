@@ -19,7 +19,7 @@
   "author": "Gregor Martynus (https://dev.to/gr2m)",
   "license": "MIT",
   "devDependencies": {
-    "@octokit/core": "^3.1.4",
+    "@octokit/core": "^3.2.1",
     "@pika/pack": "^0.5.0",
     "@pika/plugin-build-node": "^0.9.2",
     "@pika/plugin-build-web": "^0.9.2",
