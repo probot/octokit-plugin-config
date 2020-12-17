@@ -124,7 +124,7 @@ const { config, files } = await octokit.config.get({
       <th><code>branch</code></th>
       <td>String</td>
       <td>
-        Defaults to the repository's default branch. The branch is only used for the provided repository, not for the <code>.github<code> repository or other configurations linked using <a href="extends">the <code>_extends</code> key</a>.
+        Defaults to the repository's default branch. The branch is only used for the provided repository, not for the <code>.github</code> repository or other configurations linked using <a href="extends">the <code>_extends</code> key</a>.
       </td>
     </tr>
   </tbody>
