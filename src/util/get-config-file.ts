@@ -82,7 +82,7 @@ export async function getConfigFile(
       };
     }
 
-    const config = ((yaml.safeLoad(data) || {}) as unknown) as Configuration;
+    const config = ((yaml.load(data) || {}) as unknown) as Configuration;
 
     if (typeof config === "string") {
       throw new Error(
