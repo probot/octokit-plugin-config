@@ -9,7 +9,7 @@
     "pretest": "npm run -s lint",
     "test": "jest --coverage"
   },
-  "repository": "https://github.com/probot/octokit-plugin-config",
+  "repository": "github:probot/octokit-plugin-config",
   "keywords": [
     "github",
     "api",
