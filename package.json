@@ -93,6 +93,6 @@
   },
   "dependencies": {
     "@types/js-yaml": "^4.0.0",
-    "js-yaml": "^4.0.0"
+    "js-yaml": "^4.1.0"
   }
 }
