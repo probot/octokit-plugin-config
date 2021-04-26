@@ -92,7 +92,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@types/js-yaml": "^4.0.0",
+    "@types/js-yaml": "^4.0.1",
     "js-yaml": "^4.1.0"
   }
 }
