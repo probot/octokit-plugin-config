@@ -22,11 +22,9 @@ config.VERSION = VERSION;
 export { composeConfigGet } from "./compose-config-get";
 
 export namespace createPullRequest {
-  export type GetOptions<
-    T extends Types.Configuration = Types.Configuration
-  > = Types.GetOptions<T>;
-  export type GetResult<
-    T extends Types.Configuration = Types.Configuration
-  > = Types.GetResult<T>;
+  export type GetOptions<T extends Types.Configuration = Types.Configuration> =
+    Types.GetOptions<T>;
+  export type GetResult<T extends Types.Configuration = Types.Configuration> =
+    Types.GetResult<T>;
   export type ConfigFile = Types.ConfigFile;
 }
