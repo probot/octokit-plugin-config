@@ -31,29 +31,29 @@ export async function getConfigFile(
   }
 
   // https://docs.github.com/en/rest/reference/repos#get-repository-content
-  const requestOptions = await octokit.request.endpoint(
-    "GET /repos/{owner}/{repo}/contents/{path}",
-    {
-      owner,
-      repo,
-      path,
-      mediaType: {
-        format: "raw",
-      },
-      // this can be just `ref` once https://github.com/octokit/endpoint.js/issues/206 is resolved
-      ...(ref ? { ref } : {}),
-    }
-  );
+  const endpoint = {
+    method: "GET",
+    url: "/repos/{owner}/{repo}/contents/{path}",
+    owner,
+    repo,
+    path,
+    mediaType: {
+      format: "raw",
+    },
+    // this can be just `ref` once https://github.com/octokit/endpoint.js/issues/206 is resolved
+    ...(ref ? { ref } : {}),
+  };
+  const { url } = await octokit.request.endpoint(endpoint);
   const emptyConfigResult = {
     owner,
     repo,
     path,
-    url: requestOptions.url,
+    url,
     config: null,
   };
 
   try {
-    const { data, headers } = await octokit.request(requestOptions);
+    const { data, headers } = await octokit.request(endpoint);
 
     // If path is a submodule, or a folder, then a JSON string is returned with
     // the "Content-Type" header set to "application/json; charset=utf-8".
@@ -65,14 +65,14 @@ export async function getConfigFile(
     // so we are fine
     if (headers["content-type"] === "application/json; charset=utf-8") {
       throw new Error(
-        `[@probot/octokit-plugin-config] ${requestOptions.url} exists, but is either a directory or a submodule. Ignoring.`
+        `[@probot/octokit-plugin-config] ${url} exists, but is either a directory or a submodule. Ignoring.`
       );
     }
 
     if (fileExtension === "json") {
       if (typeof data === "string") {
         throw new Error(
-          `[@probot/octokit-plugin-config] Configuration could not be parsed from ${requestOptions.url} (invalid JSON)`
+          `[@probot/octokit-plugin-config] Configuration could not be parsed from ${url} (invalid JSON)`
         );
       }
 
@@ -86,7 +86,7 @@ export async function getConfigFile(
 
     if (typeof config === "string") {
       throw new Error(
-        `[@probot/octokit-plugin-config] Configuration could not be parsed from ${requestOptions.url} (YAML is not an object)`
+        `[@probot/octokit-plugin-config] Configuration could not be parsed from ${url} (YAML is not an object)`
       );
     }
 
@@ -105,7 +105,7 @@ export async function getConfigFile(
         : "invalid YAML";
 
       throw new Error(
-        `[@probot/octokit-plugin-config] Configuration could not be parsed from ${requestOptions.url} (${reason})`
+        `[@probot/octokit-plugin-config] Configuration could not be parsed from ${url} (${reason})`
       );
     }
 
