@@ -387,7 +387,7 @@ describe("octokit.config.get", () => {
         repo: "hello-world",
         path: ".github/my-app.yml",
       });
-    } catch (error) {
+    } catch (error: any) {
       expect(error.message).toMatchInlineSnapshot(
         `"[@probot/octokit-plugin-config] https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml exists, but is either a directory or a submodule. Ignoring."`
       );
@@ -497,7 +497,7 @@ describe("octokit.config.get", () => {
         repo: "hello-world",
         path: ".github/my-app.yml",
       });
-    } catch (error) {
+    } catch (error: any) {
       expect(error.status).toEqual(500);
     }
 
@@ -539,7 +539,7 @@ describe("octokit.config.get", () => {
         repo: "hello-world",
         path: ".github/my-app.yml",
       });
-    } catch (error) {
+    } catch (error: any) {
       expect(error.message).toMatchInlineSnapshot(
         `"[@probot/octokit-plugin-config] Recursion detected. Ignoring  \\"_extends: undefined\\" from https://api.github.com/repos/octocat/base/contents/.github%2Fmy-app.yml because https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml was already loaded."`
       );
@@ -613,7 +613,7 @@ describe("octokit.config.get", () => {
         repo: "hello-world",
         path: ".github/my-app.unknown",
       });
-    } catch (error) {
+    } catch (error: any) {
       expect(error.message).toEqual(
         '[@probot/octokit-plugin-config] .unknown extension is not support for configuration (path: ".github/my-app.unknown")'
       );
@@ -646,7 +646,7 @@ describe("octokit.config.get", () => {
         repo: "hello-world",
         path: ".github/my-app.json",
       });
-    } catch (error) {
+    } catch (error: any) {
       expect(error.message).toMatchInlineSnapshot(
         `"[@probot/octokit-plugin-config] Configuration could not be parsed from https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.json (invalid JSON)"`
       );
@@ -681,7 +681,7 @@ describe("octokit.config.get", () => {
         repo: "hello-world",
         path: ".github/my-app.yaml",
       });
-    } catch (error) {
+    } catch (error: any) {
       expect(error.message).toMatchInlineSnapshot(
         `"[@probot/octokit-plugin-config] Configuration could not be parsed from https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yaml (YAML is not an object)"`
       );
@@ -716,7 +716,7 @@ describe("octokit.config.get", () => {
         repo: "hello-world",
         path: ".github/my-app.yaml",
       });
-    } catch (error) {
+    } catch (error: any) {
       expect(error.message).toMatchInlineSnapshot(
         `"[@probot/octokit-plugin-config] Configuration could not be parsed from https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yaml (invalid YAML)"`
       );
@@ -750,7 +750,7 @@ describe("octokit.config.get", () => {
         repo: "hello-world",
         path: ".github/my-app.yaml",
       });
-    } catch (error) {
+    } catch (error: any) {
       expect(error.message).toMatchInlineSnapshot(
         `"[@probot/octokit-plugin-config] Configuration could not be parsed from https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yaml (unsafe YAML)"`
       );
@@ -881,7 +881,7 @@ describe("octokit.config.get", () => {
         repo: "hello-world",
         path: ".github/my-app.yml",
       });
-    } catch (error) {
+    } catch (error: any) {
       expect(error.message).toMatchInlineSnapshot(
         `"[@probot/octokit-plugin-config] Invalid value \\"invalid!\\" for _extends in https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml"`
       );
@@ -913,7 +913,7 @@ describe("octokit.config.get", () => {
         repo: "hello-world",
         path: ".github/my-app.yml",
       });
-    } catch (error) {
+    } catch (error: any) {
       expect(error.message).toMatchInlineSnapshot(
         `"[@probot/octokit-plugin-config] Invalid value {\\"nope\\":null} for _extends in https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml"`
       );
