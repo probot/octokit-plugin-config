@@ -94,7 +94,7 @@ export async function getConfigFile(
       ...emptyConfigResult,
       config,
     };
-  } catch (error) {
+  } catch (error: any) {
     if (error.status === 404) {
       return emptyConfigResult;
     }
