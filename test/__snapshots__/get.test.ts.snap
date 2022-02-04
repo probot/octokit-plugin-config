@@ -400,6 +400,49 @@ Object {
 }
 `;
 
+exports[`octokit.config.get resolves _extends in .github repository file: result 1`] = `
+Object {
+  "config": Object {
+    "config": "value from octocat/.github:.github/my-second-app.yml",
+    "otherConfig": "value from octocat/hello-world:.github/my-third-app.yml",
+  },
+  "files": Array [
+    Object {
+      "config": null,
+      "owner": "octocat",
+      "path": ".github/my-app.yml",
+      "repo": "hello-world",
+      "url": "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
+    },
+    Object {
+      "config": Object {},
+      "owner": "octocat",
+      "path": ".github/my-app.yml",
+      "repo": ".github",
+      "url": "https://api.github.com/repos/octocat/.github/contents/.github%2Fmy-app.yml",
+    },
+    Object {
+      "config": Object {
+        "config": "value from octocat/.github:.github/my-second-app.yml",
+      },
+      "owner": "octocat",
+      "path": ".github/my-second-app.yml",
+      "repo": ".github",
+      "url": "https://api.github.com/repos/octocat/.github/contents/.github%2Fmy-second-app.yml",
+    },
+    Object {
+      "config": Object {
+        "otherConfig": "value from octocat/hello-world:.github/my-third-app.yml",
+      },
+      "owner": "octocat",
+      "path": ".github/my-third-app.yml",
+      "repo": "hello-world",
+      "url": "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-third-app.yml",
+    },
+  ],
+}
+`;
+
 exports[`octokit.config.get merges defaults option: result 1`] = `
 Object {
   "config": Object {
