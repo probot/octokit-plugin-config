@@ -32,11 +32,13 @@ export async function getConfigFiles(
     ref: branch,
   });
 
+  const files = [requestedRepoFile];
+
   // if no configuration file present in selected repository,
   // try to load it from the `.github` repository
   if (!requestedRepoFile.config) {
     if (repo === ".github") {
-      return [requestedRepoFile];
+      return files;
     }
 
     const defaultRepoConfig = await getConfigFile(octokit, {
@@ -45,12 +47,14 @@ export async function getConfigFiles(
       path,
     });
 
-    return [requestedRepoFile, defaultRepoConfig];
+    files.push(defaultRepoConfig);
   }
 
+  const file = files[files.length - 1];
+
   // if the configuration has no `_extends` key, we are done here.
-  if (!requestedRepoFile.config._extends) {
-    return [requestedRepoFile];
+  if (!file.config || !file.config._extends) {
+    return files;
   }
 
   // parse the value of `_extends` into request parameters to
@@ -58,13 +62,12 @@ export async function getConfigFiles(
   let extendConfigOptions = extendsToGetContentParams({
     owner,
     path,
-    url: requestedRepoFile.url,
-    extendsValue: requestedRepoFile.config._extends as string,
+    url: file.url,
+    extendsValue: file.config._extends as string,
   });
 
   // remove the `_extends` key from the configuration that is returned
-  delete requestedRepoFile.config._extends;
-  const files = [requestedRepoFile];
+  delete file.config._extends;
 
   // now load the configuration linked from the `_extends` key. If that
   // configuration also includes an `_extends` key, then load that configuration

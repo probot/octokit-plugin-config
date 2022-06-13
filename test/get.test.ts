@@ -180,6 +180,48 @@ describe("octokit.config.get", () => {
     expect(mock.done()).toBe(true);
   });
 
+  it("resolves _extends in .github repository file", async () => {
+    const mock = fetchMock
+      .sandbox()
+      .getOnce(
+        "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
+        NOT_FOUND_RESPONSE
+      )
+      .getOnce(
+        "https://api.github.com/repos/octocat/.github/contents/.github%2Fmy-app.yml",
+        `_extends: '.github:.github/my-second-app.yml'`
+      )
+      .getOnce(
+        "https://api.github.com/repos/octocat/.github/contents/.github%2Fmy-second-app.yml",
+        stripIndent(`
+        config: value from octocat/.github:.github/my-second-app.yml
+        _extends: hello-world:.github/my-third-app.yml`)
+      )
+      .getOnce(
+        "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-third-app.yml",
+        `otherConfig: 'value from octocat/hello-world:.github/my-third-app.yml'`
+      );
+
+    const octokit = new TestOctokit({
+      request: {
+        fetch: mock,
+      },
+    });
+
+    const result = await octokit.config.get({
+      owner: "octocat",
+      repo: "hello-world",
+      path: ".github/my-app.yml",
+      defaults: {
+        config: "default value",
+        otherConfig: "default value",
+      },
+    });
+
+    expect(result).toMatchSnapshot("result");
+    expect(mock.done()).toBe(true);
+  });
+
   it("merges deeply using defaults function", async () => {
     const mock = fetchMock.sandbox().getOnce(
       "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
