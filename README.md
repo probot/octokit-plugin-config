@@ -251,7 +251,7 @@ const { config } = await octokit.config.get({
   owner,
   repo,
   path: ".github/test.yml",
-  defaults: (configs) => deepmerge([defaults, ...configs]),
+  defaults: (configs) => deepmerge.all([defaults, ...configs]),
 });
 ```
 
