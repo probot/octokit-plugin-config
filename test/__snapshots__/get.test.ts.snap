@@ -1,13 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`octokit.config.get .json extension: result 1`] = `
-Object {
-  "config": Object {
+{
+  "config": {
     "comment": "Thank you for creating the issue!",
   },
-  "files": Array [
-    Object {
-      "config": Object {
+  "files": [
+    {
+      "config": {
         "comment": "Thank you for creating the issue!",
       },
       "owner": "octocat",
@@ -20,13 +20,13 @@ Object {
 `;
 
 exports[`octokit.config.get .yaml extension: result 1`] = `
-Object {
-  "config": Object {
+{
+  "config": {
     "comment": "Thank you for creating the issue!",
   },
-  "files": Array [
-    Object {
-      "config": Object {
+  "files": [
+    {
+      "config": {
         "comment": "Thank you for creating the issue!",
       },
       "owner": "octocat",
@@ -39,13 +39,13 @@ Object {
 `;
 
 exports[`octokit.config.get _extends file is missing: result 1`] = `
-Object {
-  "config": Object {
+{
+  "config": {
     "setting1": "value from repo config file",
   },
-  "files": Array [
-    Object {
-      "config": Object {
+  "files": [
+    {
+      "config": {
         "setting1": "value from repo config file",
       },
       "owner": "octocat",
@@ -53,7 +53,7 @@ Object {
       "repo": "hello-world",
       "url": "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
     },
-    Object {
+    {
       "config": null,
       "owner": "octocat",
       "path": ".github/my-app.yml",
@@ -65,15 +65,15 @@ Object {
 `;
 
 exports[`octokit.config.get _extends: base -> _extends: base2: result 1`] = `
-Object {
-  "config": Object {
+{
+  "config": {
     "setting1": "value from repo config file",
     "setting2": "value from base1 config file",
     "setting3": "value from base2 config file",
   },
-  "files": Array [
-    Object {
-      "config": Object {
+  "files": [
+    {
+      "config": {
         "setting1": "value from repo config file",
       },
       "owner": "octocat",
@@ -81,8 +81,8 @@ Object {
       "repo": "hello-world",
       "url": "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
     },
-    Object {
-      "config": Object {
+    {
+      "config": {
         "setting1": "value from base1 config file",
         "setting2": "value from base1 config file",
       },
@@ -91,8 +91,8 @@ Object {
       "repo": "base",
       "url": "https://api.github.com/repos/octocat/base/contents/.github%2Fmy-app.yml",
     },
-    Object {
-      "config": Object {
+    {
+      "config": {
         "setting1": "value from base2 config file",
         "setting2": "value from base2 config file",
         "setting3": "value from base2 config file",
@@ -107,22 +107,22 @@ Object {
 `;
 
 exports[`octokit.config.get _extends: base with defaults and custom merge: result 1`] = `
-Object {
-  "config": Object {
+{
+  "config": {
     "otherSetting1": "value from repo config file",
     "otherSetting2": "value from base config file",
     "otherSetting3": "default value",
-    "settings": Object {
+    "settings": {
       "one": "value from repo config file",
       "three": "default value",
       "two": "value from base config file",
     },
   },
-  "files": Array [
-    Object {
-      "config": Object {
+  "files": [
+    {
+      "config": {
         "otherSetting1": "value from repo config file",
-        "settings": Object {
+        "settings": {
           "one": "value from repo config file",
         },
       },
@@ -131,11 +131,11 @@ Object {
       "repo": "hello-world",
       "url": "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
     },
-    Object {
-      "config": Object {
+    {
+      "config": {
         "otherSetting1": "value from base config file",
         "otherSetting2": "value from base config file",
-        "settings": Object {
+        "settings": {
           "one": "value from base config file",
           "two": "value from base config file",
         },
@@ -150,14 +150,14 @@ Object {
 `;
 
 exports[`octokit.config.get _extends: base: result 1`] = `
-Object {
-  "config": Object {
+{
+  "config": {
     "setting1": "value from repo config file",
     "setting2": "value from base config file",
   },
-  "files": Array [
-    Object {
-      "config": Object {
+  "files": [
+    {
+      "config": {
         "setting1": "value from repo config file",
       },
       "owner": "octocat",
@@ -165,8 +165,8 @@ Object {
       "repo": "hello-world",
       "url": "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
     },
-    Object {
-      "config": Object {
+    {
+      "config": {
         "setting1": "value from base config file",
         "setting2": "value from base config file",
       },
@@ -180,14 +180,14 @@ Object {
 `;
 
 exports[`octokit.config.get _extends: base:test.yml: result 1`] = `
-Object {
-  "config": Object {
+{
+  "config": {
     "setting1": "value from repo config file",
     "setting2": "value from base config file",
   },
-  "files": Array [
-    Object {
-      "config": Object {
+  "files": [
+    {
+      "config": {
         "setting1": "value from repo config file",
       },
       "owner": "octocat",
@@ -195,8 +195,8 @@ Object {
       "repo": "hello-world",
       "url": "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
     },
-    Object {
-      "config": Object {
+    {
+      "config": {
         "setting1": "value from base config file",
         "setting2": "value from base config file",
       },
@@ -210,14 +210,14 @@ Object {
 `;
 
 exports[`octokit.config.get _extends: other-owner/base: result 1`] = `
-Object {
-  "config": Object {
+{
+  "config": {
     "setting1": "value from repo config file",
     "setting2": "value from base config file",
   },
-  "files": Array [
-    Object {
-      "config": Object {
+  "files": [
+    {
+      "config": {
         "setting1": "value from repo config file",
       },
       "owner": "octocat",
@@ -225,8 +225,8 @@ Object {
       "repo": "hello-world",
       "url": "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
     },
-    Object {
-      "config": Object {
+    {
+      "config": {
         "setting1": "value from base config file",
         "setting2": "value from base config file",
       },
@@ -240,14 +240,14 @@ Object {
 `;
 
 exports[`octokit.config.get _extends: other-owner/base:test.yml: result 1`] = `
-Object {
-  "config": Object {
+{
+  "config": {
     "setting1": "value from repo config file",
     "setting2": "value from base config file",
   },
-  "files": Array [
-    Object {
-      "config": Object {
+  "files": [
+    {
+      "config": {
         "setting1": "value from repo config file",
       },
       "owner": "octocat",
@@ -255,8 +255,8 @@ Object {
       "repo": "hello-world",
       "url": "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
     },
-    Object {
-      "config": Object {
+    {
+      "config": {
         "setting1": "value from base config file",
         "setting2": "value from base config file",
       },
@@ -270,13 +270,13 @@ Object {
 `;
 
 exports[`octokit.config.get README simple usage example: result 1`] = `
-Object {
-  "config": Object {
+{
+  "config": {
     "comment": "Thank you for creating the issue!",
   },
-  "files": Array [
-    Object {
-      "config": Object {
+  "files": [
+    {
+      "config": {
         "comment": "Thank you for creating the issue!",
       },
       "owner": "octocat",
@@ -289,13 +289,13 @@ Object {
 `;
 
 exports[`octokit.config.get branch option: result 1`] = `
-Object {
-  "config": Object {
+{
+  "config": {
     "comment": "Thank you for creating the issue!",
   },
-  "files": Array [
-    Object {
-      "config": Object {
+  "files": [
+    {
+      "config": {
         "comment": "Thank you for creating the issue!",
       },
       "owner": "octocat",
@@ -308,11 +308,11 @@ Object {
 `;
 
 exports[`octokit.config.get config file is empty: result 1`] = `
-Object {
-  "config": Object {},
-  "files": Array [
-    Object {
-      "config": Object {},
+{
+  "config": {},
+  "files": [
+    {
+      "config": {},
       "owner": "octocat",
       "path": ".github/my-app.yml",
       "repo": "hello-world",
@@ -323,19 +323,19 @@ Object {
 `;
 
 exports[`octokit.config.get config file missing: result 1`] = `
-Object {
-  "config": Object {
+{
+  "config": {
     "comment": "Thank you for creating the issue!",
   },
-  "files": Array [
-    Object {
+  "files": [
+    {
       "config": null,
       "owner": "octocat",
       "path": ".github/my-app.yml",
       "repo": "hello-world",
       "url": "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
     },
-    Object {
+    {
       "config": null,
       "owner": "octocat",
       "path": ".github/my-app.yml",
@@ -347,20 +347,20 @@ Object {
 `;
 
 exports[`octokit.config.get merges deeply using defaults function: result 1`] = `
-Object {
-  "config": Object {
+{
+  "config": {
     "otherSetting1": "value from config file",
     "otherSetting2": "default value",
-    "settings": Object {
+    "settings": {
       "one": "value from config file",
       "two": "default value",
     },
   },
-  "files": Array [
-    Object {
-      "config": Object {
+  "files": [
+    {
+      "config": {
         "otherSetting1": "value from config file",
-        "settings": Object {
+        "settings": {
           "one": "value from config file",
         },
       },
@@ -374,21 +374,21 @@ Object {
 `;
 
 exports[`octokit.config.get merges defaults option from .github repository: result 1`] = `
-Object {
-  "config": Object {
+{
+  "config": {
     "config": "value from octocat/.github:.github/my-app.yml",
     "otherConfig": "default value",
   },
-  "files": Array [
-    Object {
+  "files": [
+    {
       "config": null,
       "owner": "octocat",
       "path": ".github/my-app.yml",
       "repo": "hello-world",
       "url": "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
     },
-    Object {
-      "config": Object {
+    {
+      "config": {
         "config": "value from octocat/.github:.github/my-app.yml",
       },
       "owner": "octocat",
@@ -400,58 +400,15 @@ Object {
 }
 `;
 
-exports[`octokit.config.get resolves _extends in .github repository file: result 1`] = `
-Object {
-  "config": Object {
-    "config": "value from octocat/.github:.github/my-second-app.yml",
-    "otherConfig": "value from octocat/hello-world:.github/my-third-app.yml",
-  },
-  "files": Array [
-    Object {
-      "config": null,
-      "owner": "octocat",
-      "path": ".github/my-app.yml",
-      "repo": "hello-world",
-      "url": "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
-    },
-    Object {
-      "config": Object {},
-      "owner": "octocat",
-      "path": ".github/my-app.yml",
-      "repo": ".github",
-      "url": "https://api.github.com/repos/octocat/.github/contents/.github%2Fmy-app.yml",
-    },
-    Object {
-      "config": Object {
-        "config": "value from octocat/.github:.github/my-second-app.yml",
-      },
-      "owner": "octocat",
-      "path": ".github/my-second-app.yml",
-      "repo": ".github",
-      "url": "https://api.github.com/repos/octocat/.github/contents/.github%2Fmy-second-app.yml",
-    },
-    Object {
-      "config": Object {
-        "otherConfig": "value from octocat/hello-world:.github/my-third-app.yml",
-      },
-      "owner": "octocat",
-      "path": ".github/my-third-app.yml",
-      "repo": "hello-world",
-      "url": "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-third-app.yml",
-    },
-  ],
-}
-`;
-
 exports[`octokit.config.get merges defaults option: result 1`] = `
-Object {
-  "config": Object {
+{
+  "config": {
     "config": "value from .github/my-app.yml",
     "otherConfig": "default value",
   },
-  "files": Array [
-    Object {
-      "config": Object {
+  "files": [
+    {
+      "config": {
         "config": "value from .github/my-app.yml",
       },
       "owner": "octocat",
@@ -464,10 +421,10 @@ Object {
 `;
 
 exports[`octokit.config.get repo is .github: result 1`] = `
-Object {
-  "config": Object {},
-  "files": Array [
-    Object {
+{
+  "config": {},
+  "files": [
+    {
       "config": null,
       "owner": "octocat",
       "path": ".github/my-app.yml",
@@ -478,20 +435,63 @@ Object {
 }
 `;
 
-exports[`octokit.config.get returns defaults option when no config files exist: result 1`] = `
-Object {
-  "config": Object {
-    "comment": "Thank you for creating the issue!",
+exports[`octokit.config.get resolves _extends in .github repository file: result 1`] = `
+{
+  "config": {
+    "config": "value from octocat/.github:.github/my-second-app.yml",
+    "otherConfig": "value from octocat/hello-world:.github/my-third-app.yml",
   },
-  "files": Array [
-    Object {
+  "files": [
+    {
       "config": null,
       "owner": "octocat",
       "path": ".github/my-app.yml",
       "repo": "hello-world",
       "url": "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
     },
-    Object {
+    {
+      "config": {},
+      "owner": "octocat",
+      "path": ".github/my-app.yml",
+      "repo": ".github",
+      "url": "https://api.github.com/repos/octocat/.github/contents/.github%2Fmy-app.yml",
+    },
+    {
+      "config": {
+        "config": "value from octocat/.github:.github/my-second-app.yml",
+      },
+      "owner": "octocat",
+      "path": ".github/my-second-app.yml",
+      "repo": ".github",
+      "url": "https://api.github.com/repos/octocat/.github/contents/.github%2Fmy-second-app.yml",
+    },
+    {
+      "config": {
+        "otherConfig": "value from octocat/hello-world:.github/my-third-app.yml",
+      },
+      "owner": "octocat",
+      "path": ".github/my-third-app.yml",
+      "repo": "hello-world",
+      "url": "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-third-app.yml",
+    },
+  ],
+}
+`;
+
+exports[`octokit.config.get returns defaults option when no config files exist: result 1`] = `
+{
+  "config": {
+    "comment": "Thank you for creating the issue!",
+  },
+  "files": [
+    {
+      "config": null,
+      "owner": "octocat",
+      "path": ".github/my-app.yml",
+      "repo": "hello-world",
+      "url": "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
+    },
+    {
       "config": null,
       "owner": "octocat",
       "path": ".github/my-app.yml",
