@@ -583,7 +583,7 @@ describe("octokit.config.get", () => {
       });
     } catch (error: any) {
       expect(error.message).toMatchInlineSnapshot(
-        `"[@probot/octokit-plugin-config] Recursion detected. Ignoring  \\"_extends: undefined\\" from https://api.github.com/repos/octocat/base/contents/.github%2Fmy-app.yml because https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml was already loaded."`
+        `"[@probot/octokit-plugin-config] Recursion detected. Ignoring  "_extends: undefined" from https://api.github.com/repos/octocat/base/contents/.github%2Fmy-app.yml because https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml was already loaded."`
       );
     }
 
@@ -925,7 +925,7 @@ describe("octokit.config.get", () => {
       });
     } catch (error: any) {
       expect(error.message).toMatchInlineSnapshot(
-        `"[@probot/octokit-plugin-config] Invalid value \\"invalid!\\" for _extends in https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml"`
+        `"[@probot/octokit-plugin-config] Invalid value "invalid!" for _extends in https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml"`
       );
     }
 
@@ -957,7 +957,7 @@ describe("octokit.config.get", () => {
       });
     } catch (error: any) {
       expect(error.message).toMatchInlineSnapshot(
-        `"[@probot/octokit-plugin-config] Invalid value {\\"nope\\":null} for _extends in https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml"`
+        `"[@probot/octokit-plugin-config] Invalid value {"nope":null} for _extends in https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml"`
       );
     }
 
