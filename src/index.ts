@@ -2,7 +2,7 @@ import { Octokit } from "@octokit/core";
 
 import { VERSION } from "./version";
 import { composeConfigGet } from "./compose-config-get";
-import * as Types from "./types";
+import type * as Types from "./types";
 
 /**
  * @param octokit Octokit instance
