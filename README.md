@@ -287,7 +287,7 @@ async function myTest() {
     path: ".github/my-app.yml",
   });
 
-  asert.deepStrictEqual(config, {
+  assert.deepStrictEqual(config, {
     comment: "Thank you for creating the issue!",
   });
 }
@@ -299,7 +299,7 @@ Without configuration
 async function myTest() {
   nock("https://api.github.com")
     .get("/repos/octocat/hello-world/contents/.github%2Fmy-app.yml")
-    .reply(404);
+    .reply(404)
     .get("/repos/octocat/.github/contents/.github%2Fmy-app.yml")
     .reply(404);
 
@@ -311,7 +311,7 @@ async function myTest() {
     path: ".github/my-app.yml",
   });
 
-  asert.deepStrictEqual(config, {});
+  assert.deepStrictEqual(config, {});
 }
 ```
 
@@ -337,7 +337,7 @@ async function myTest() {
     path: ".github/my-app.yml",
   });
 
-  asert.deepStrictEqual(config, {
+  assert.deepStrictEqual(config, {
     comment: "Thank you for creating the issue!",
   });
 }
@@ -352,7 +352,7 @@ async function myTest() {
     .getOnce(
       "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
       404
-    );
+    )
     .getOnce(
       "https://api.github.com/repos/octocat/.github/contents/.github%2Fmy-app.yml",
       404
@@ -367,7 +367,7 @@ async function myTest() {
     path: ".github/my-app.yml",
   });
 
-  asert.deepStrictEqual(config, {});
+  assert.deepStrictEqual(config, {});
 }
 ```
 
