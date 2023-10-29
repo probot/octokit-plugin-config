@@ -20,13 +20,13 @@ const SUPPORTED_FILE_EXTENSIONS = ["json", "yml", "yaml"];
  */
 export async function getConfigFile(
   octokit: Octokit,
-  { owner, repo, path, ref }: Options
+  { owner, repo, path, ref }: Options,
 ): Promise<ConfigFile> {
   const fileExtension = (path.split(".").pop() as string).toLowerCase();
 
   if (!SUPPORTED_FILE_EXTENSIONS.includes(fileExtension)) {
     throw new Error(
-      `[@probot/octokit-plugin-config] .${fileExtension} extension is not support for configuration (path: "${path}")`
+      `[@probot/octokit-plugin-config] .${fileExtension} extension is not support for configuration (path: "${path}")`,
     );
   }
 
@@ -65,14 +65,14 @@ export async function getConfigFile(
     // so we are fine
     if (headers["content-type"] === "application/json; charset=utf-8") {
       throw new Error(
-        `[@probot/octokit-plugin-config] ${url} exists, but is either a directory or a submodule. Ignoring.`
+        `[@probot/octokit-plugin-config] ${url} exists, but is either a directory or a submodule. Ignoring.`,
       );
     }
 
     if (fileExtension === "json") {
       if (typeof data === "string") {
         throw new Error(
-          `[@probot/octokit-plugin-config] Configuration could not be parsed from ${url} (invalid JSON)`
+          `[@probot/octokit-plugin-config] Configuration could not be parsed from ${url} (invalid JSON)`,
         );
       }
 
@@ -86,7 +86,7 @@ export async function getConfigFile(
 
     if (typeof config === "string") {
       throw new Error(
-        `[@probot/octokit-plugin-config] Configuration could not be parsed from ${url} (YAML is not an object)`
+        `[@probot/octokit-plugin-config] Configuration could not be parsed from ${url} (YAML is not an object)`,
       );
     }
 
@@ -105,7 +105,7 @@ export async function getConfigFile(
         : "invalid YAML";
 
       throw new Error(
-        `[@probot/octokit-plugin-config] Configuration could not be parsed from ${url} (${reason})`
+        `[@probot/octokit-plugin-config] Configuration could not be parsed from ${url} (${reason})`,
       );
     }
 

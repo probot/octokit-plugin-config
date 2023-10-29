@@ -18,11 +18,11 @@ const NOT_FOUND_RESPONSE = {
 
 const deepMergeSettings = (
   defaults: Configuration,
-  configs: Configuration[]
+  configs: Configuration[],
 ) => {
   const allConfigs = [defaults, ...configs];
   const fileSettingsConfigs = allConfigs.map(
-    (config: Configuration) => config.settings
+    (config: Configuration) => config.settings,
   );
   return Object.assign({}, ...allConfigs, {
     settings: Object.assign({}, ...fileSettingsConfigs),
@@ -40,7 +40,7 @@ describe("octokit.config.get", () => {
           headers: {
             accept: "application/vnd.github.v3.raw",
           },
-        }
+        },
       );
     const octokit = new TestOctokit({
       request: {
@@ -63,11 +63,11 @@ describe("octokit.config.get", () => {
       .sandbox()
       .getOnce(
         "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
-        NOT_FOUND_RESPONSE
+        NOT_FOUND_RESPONSE,
       )
       .getOnce(
         "https://api.github.com/repos/octocat/.github/contents/.github%2Fmy-app.yml",
-        NOT_FOUND_RESPONSE
+        NOT_FOUND_RESPONSE,
       );
 
     const octokit = new TestOctokit({
@@ -94,11 +94,11 @@ describe("octokit.config.get", () => {
       .sandbox()
       .getOnce(
         "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
-        NOT_FOUND_RESPONSE
+        NOT_FOUND_RESPONSE,
       )
       .getOnce(
         "https://api.github.com/repos/octocat/.github/contents/.github%2Fmy-app.yml",
-        NOT_FOUND_RESPONSE
+        NOT_FOUND_RESPONSE,
       );
 
     const octokit = new TestOctokit({
@@ -125,7 +125,7 @@ describe("octokit.config.get", () => {
       .sandbox()
       .getOnce(
         "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
-        `config: 'value from .github/my-app.yml'`
+        `config: 'value from .github/my-app.yml'`,
       );
 
     const octokit = new TestOctokit({
@@ -153,11 +153,11 @@ describe("octokit.config.get", () => {
       .sandbox()
       .getOnce(
         "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
-        NOT_FOUND_RESPONSE
+        NOT_FOUND_RESPONSE,
       )
       .getOnce(
         "https://api.github.com/repos/octocat/.github/contents/.github%2Fmy-app.yml",
-        `config: 'value from octocat/.github:.github/my-app.yml'`
+        `config: 'value from octocat/.github:.github/my-app.yml'`,
       );
 
     const octokit = new TestOctokit({
@@ -185,21 +185,21 @@ describe("octokit.config.get", () => {
       .sandbox()
       .getOnce(
         "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
-        NOT_FOUND_RESPONSE
+        NOT_FOUND_RESPONSE,
       )
       .getOnce(
         "https://api.github.com/repos/octocat/.github/contents/.github%2Fmy-app.yml",
-        `_extends: '.github:.github/my-second-app.yml'`
+        `_extends: '.github:.github/my-second-app.yml'`,
       )
       .getOnce(
         "https://api.github.com/repos/octocat/.github/contents/.github%2Fmy-second-app.yml",
         stripIndent(`
         config: value from octocat/.github:.github/my-second-app.yml
-        _extends: hello-world:.github/my-third-app.yml`)
+        _extends: hello-world:.github/my-third-app.yml`),
       )
       .getOnce(
         "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-third-app.yml",
-        `otherConfig: 'value from octocat/hello-world:.github/my-third-app.yml'`
+        `otherConfig: 'value from octocat/hello-world:.github/my-third-app.yml'`,
       );
 
     const octokit = new TestOctokit({
@@ -228,7 +228,7 @@ describe("octokit.config.get", () => {
       stripIndent(`
           settings:
             one: value from config file
-          otherSetting1: value from config file`)
+          otherSetting1: value from config file`),
     );
 
     const octokit = new TestOctokit({
@@ -266,7 +266,7 @@ describe("octokit.config.get", () => {
           headers: {
             accept: "application/vnd.github.v3.raw",
           },
-        }
+        },
       );
     const octokit = new TestOctokit({
       request: {
@@ -292,13 +292,13 @@ describe("octokit.config.get", () => {
         "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
         stripIndent(`
         setting1: value from repo config file
-        _extends: base`)
+        _extends: base`),
       )
       .getOnce(
         "https://api.github.com/repos/octocat/base/contents/.github%2Fmy-app.yml",
         stripIndent(`
         setting1: value from base config file
-        setting2: value from base config file`)
+        setting2: value from base config file`),
       );
 
     const octokit = new TestOctokit({
@@ -323,21 +323,21 @@ describe("octokit.config.get", () => {
         "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
         stripIndent(`
         setting1: value from repo config file
-        _extends: base`)
+        _extends: base`),
       )
       .getOnce(
         "https://api.github.com/repos/octocat/base/contents/.github%2Fmy-app.yml",
         stripIndent(`
         setting1: value from base1 config file
         setting2: value from base1 config file
-        _extends: base2`)
+        _extends: base2`),
       )
       .getOnce(
         "https://api.github.com/repos/octocat/base2/contents/.github%2Fmy-app.yml",
         stripIndent(`
         setting1: value from base2 config file
         setting2: value from base2 config file
-        setting3: value from base2 config file`)
+        setting3: value from base2 config file`),
       );
 
     const octokit = new TestOctokit({
@@ -364,7 +364,7 @@ describe("octokit.config.get", () => {
         settings:
           one: value from repo config file
         otherSetting1: value from repo config file
-        _extends: base`)
+        _extends: base`),
       )
       .getOnce(
         "https://api.github.com/repos/octocat/base/contents/.github%2Fmy-app.yml",
@@ -373,7 +373,7 @@ describe("octokit.config.get", () => {
           one: value from base config file
           two: value from base config file
         otherSetting1: value from base config file
-        otherSetting2: value from base config file`)
+        otherSetting2: value from base config file`),
       );
 
     const octokit = new TestOctokit({
@@ -414,7 +414,7 @@ describe("octokit.config.get", () => {
           headers: {
             "content-type": "application/json; charset=utf-8",
           },
-        }
+        },
       );
 
     const octokit = new TestOctokit({
@@ -431,7 +431,7 @@ describe("octokit.config.get", () => {
       });
     } catch (error: any) {
       expect(error.message).toMatchInlineSnapshot(
-        `"[@probot/octokit-plugin-config] https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml exists, but is either a directory or a submodule. Ignoring."`
+        `"[@probot/octokit-plugin-config] https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml exists, but is either a directory or a submodule. Ignoring."`,
       );
     }
 
@@ -443,7 +443,7 @@ describe("octokit.config.get", () => {
       .sandbox()
       .getOnce(
         "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
-        ""
+        "",
       );
 
     const octokit = new TestOctokit({
@@ -467,7 +467,7 @@ describe("octokit.config.get", () => {
       .sandbox()
       .getOnce(
         "https://api.github.com/repos/octocat/.github/contents/.github%2Fmy-app.yml",
-        NOT_FOUND_RESPONSE
+        NOT_FOUND_RESPONSE,
       );
 
     const octokit = new TestOctokit({
@@ -493,11 +493,11 @@ describe("octokit.config.get", () => {
         "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
         stripIndent(`
       setting1: value from repo config file
-      _extends: base`)
+      _extends: base`),
       )
       .getOnce(
         "https://api.github.com/repos/octocat/base/contents/.github%2Fmy-app.yml",
-        NOT_FOUND_RESPONSE
+        NOT_FOUND_RESPONSE,
       );
 
     const octokit = new TestOctokit({
@@ -524,7 +524,7 @@ describe("octokit.config.get", () => {
         "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
         {
           status: 500,
-        }
+        },
       );
 
     const octokit = new TestOctokit({
@@ -557,7 +557,7 @@ describe("octokit.config.get", () => {
         settings:
           one: value from repo config file
         otherSetting1: value from repo config file
-        _extends: base`)
+        _extends: base`),
       )
       .getOnce(
         "https://api.github.com/repos/octocat/base/contents/.github%2Fmy-app.yml",
@@ -567,7 +567,7 @@ describe("octokit.config.get", () => {
           two: value from base config file
         otherSetting1: value from base config file
         otherSetting2: value from base config file
-        _extends: hello-world`)
+        _extends: hello-world`),
       );
 
     const octokit = new TestOctokit({
@@ -583,7 +583,7 @@ describe("octokit.config.get", () => {
       });
     } catch (error: any) {
       expect(error.message).toMatchInlineSnapshot(
-        `"[@probot/octokit-plugin-config] Recursion detected. Ignoring  "_extends: undefined" from https://api.github.com/repos/octocat/base/contents/.github%2Fmy-app.yml because https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml was already loaded."`
+        `"[@probot/octokit-plugin-config] Recursion detected. Ignoring  "_extends: undefined" from https://api.github.com/repos/octocat/base/contents/.github%2Fmy-app.yml because https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml was already loaded."`,
       );
     }
 
@@ -600,7 +600,7 @@ describe("octokit.config.get", () => {
           headers: {
             accept: "application/vnd.github.v3.raw",
           },
-        }
+        },
       );
     const octokit = new TestOctokit({
       request: {
@@ -626,7 +626,7 @@ describe("octokit.config.get", () => {
         headers: {
           accept: "application/vnd.github.v3.raw",
         },
-      }
+      },
     );
     const octokit = new TestOctokit({
       request: {
@@ -657,7 +657,7 @@ describe("octokit.config.get", () => {
       });
     } catch (error: any) {
       expect(error.message).toEqual(
-        '[@probot/octokit-plugin-config] .unknown extension is not support for configuration (path: ".github/my-app.unknown")'
+        '[@probot/octokit-plugin-config] .unknown extension is not support for configuration (path: ".github/my-app.unknown")',
       );
     }
   });
@@ -674,7 +674,7 @@ describe("octokit.config.get", () => {
           headers: {
             accept: "application/vnd.github.v3.raw",
           },
-        }
+        },
       );
     const octokit = new TestOctokit({
       request: {
@@ -690,7 +690,7 @@ describe("octokit.config.get", () => {
       });
     } catch (error: any) {
       expect(error.message).toMatchInlineSnapshot(
-        `"[@probot/octokit-plugin-config] Configuration could not be parsed from https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.json (invalid JSON)"`
+        `"[@probot/octokit-plugin-config] Configuration could not be parsed from https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.json (invalid JSON)"`,
       );
     }
 
@@ -709,7 +709,7 @@ describe("octokit.config.get", () => {
           headers: {
             accept: "application/vnd.github.v3.raw",
           },
-        }
+        },
       );
     const octokit = new TestOctokit({
       request: {
@@ -725,7 +725,7 @@ describe("octokit.config.get", () => {
       });
     } catch (error: any) {
       expect(error.message).toMatchInlineSnapshot(
-        `"[@probot/octokit-plugin-config] Configuration could not be parsed from https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yaml (YAML is not an object)"`
+        `"[@probot/octokit-plugin-config] Configuration could not be parsed from https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yaml (YAML is not an object)"`,
       );
     }
 
@@ -744,7 +744,7 @@ describe("octokit.config.get", () => {
           headers: {
             accept: "application/vnd.github.v3.raw",
           },
-        }
+        },
       );
     const octokit = new TestOctokit({
       request: {
@@ -760,7 +760,7 @@ describe("octokit.config.get", () => {
       });
     } catch (error: any) {
       expect(error.message).toMatchInlineSnapshot(
-        `"[@probot/octokit-plugin-config] Configuration could not be parsed from https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yaml (invalid YAML)"`
+        `"[@probot/octokit-plugin-config] Configuration could not be parsed from https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yaml (invalid YAML)"`,
       );
     }
 
@@ -778,7 +778,7 @@ describe("octokit.config.get", () => {
           headers: {
             accept: "application/vnd.github.v3.raw",
           },
-        }
+        },
       );
     const octokit = new TestOctokit({
       request: {
@@ -794,7 +794,7 @@ describe("octokit.config.get", () => {
       });
     } catch (error: any) {
       expect(error.message).toMatchInlineSnapshot(
-        `"[@probot/octokit-plugin-config] Configuration could not be parsed from https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yaml (unsafe YAML)"`
+        `"[@probot/octokit-plugin-config] Configuration could not be parsed from https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yaml (unsafe YAML)"`,
       );
     }
 
@@ -809,14 +809,14 @@ describe("octokit.config.get", () => {
         stripIndent(`
         setting1: value from repo config file
         _extends: other-owner/base
-      `)
+      `),
       )
       .getOnce(
         "https://api.github.com/repos/other-owner/base/contents/.github%2Fmy-app.yml",
         stripIndent(`
         setting1: value from base config file
         setting2: value from base config file
-      `)
+      `),
       );
 
     const octokit = new TestOctokit({
@@ -842,14 +842,14 @@ describe("octokit.config.get", () => {
         stripIndent(`
         setting1: value from repo config file
         _extends: base:test.yml
-      `)
+      `),
       )
       .getOnce(
         "https://api.github.com/repos/octocat/base/contents/test.yml",
         stripIndent(`
         setting1: value from base config file
         setting2: value from base config file
-      `)
+      `),
       );
 
     const octokit = new TestOctokit({
@@ -875,14 +875,14 @@ describe("octokit.config.get", () => {
         stripIndent(`
         setting1: value from repo config file
         _extends: other-owner/base:test.yml
-      `)
+      `),
       )
       .getOnce(
         "https://api.github.com/repos/other-owner/base/contents/test.yml",
         stripIndent(`
         setting1: value from base config file
         setting2: value from base config file
-      `)
+      `),
       );
 
     const octokit = new TestOctokit({
@@ -908,7 +908,7 @@ describe("octokit.config.get", () => {
       stripIndent(`
         setting1: value from repo config file
         _extends: invalid!
-      `)
+      `),
     );
 
     const octokit = new TestOctokit({
@@ -925,7 +925,7 @@ describe("octokit.config.get", () => {
       });
     } catch (error: any) {
       expect(error.message).toMatchInlineSnapshot(
-        `"[@probot/octokit-plugin-config] Invalid value "invalid!" for _extends in https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml"`
+        `"[@probot/octokit-plugin-config] Invalid value "invalid!" for _extends in https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml"`,
       );
     }
 
@@ -940,7 +940,7 @@ describe("octokit.config.get", () => {
       stripIndent(`
         setting1: value from repo config file
         _extends: { nope }
-      `)
+      `),
     );
 
     const octokit = new TestOctokit({
@@ -957,7 +957,7 @@ describe("octokit.config.get", () => {
       });
     } catch (error: any) {
       expect(error.message).toMatchInlineSnapshot(
-        `"[@probot/octokit-plugin-config] Invalid value {"nope":null} for _extends in https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml"`
+        `"[@probot/octokit-plugin-config] Invalid value {"nope":null} for _extends in https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml"`,
       );
     }
 

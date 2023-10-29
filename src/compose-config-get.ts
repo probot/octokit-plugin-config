@@ -13,7 +13,7 @@ import type { Configuration, GetOptions, GetResult } from "./types";
  */
 export async function composeConfigGet<T extends Configuration = Configuration>(
   octokit: Octokit,
-  { owner, repo, defaults, path, branch }: GetOptions<T>
+  { owner, repo, defaults, path, branch }: GetOptions<T>,
 ): Promise<GetResult<T>> {
   const files = await getConfigFiles(octokit, {
     owner,
