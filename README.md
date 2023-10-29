@@ -351,11 +351,11 @@ async function myTest() {
     .sandbox()
     .getOnce(
       "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
-      404
+      404,
     )
     .getOnce(
       "https://api.github.com/repos/octocat/.github/contents/.github%2Fmy-app.yml",
-      404
+      404,
     );
   const octokit = new TestOctokit({
     request: { fetch },
