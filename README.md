@@ -325,7 +325,7 @@ async function myTest() {
     .sandbox()
     .getOnce(
       "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
-      "comment: 'Thank you for creating the issue!'"
+      "comment: 'Thank you for creating the issue!'",
     );
   const octokit = new TestOctokit({
     request: { fetch },

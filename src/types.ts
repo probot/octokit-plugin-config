@@ -3,7 +3,7 @@ export type Configuration = Record<string, unknown>;
 export type API = {
   config: {
     get<T extends Configuration = Configuration>(
-      options: GetOptions<T>
+      options: GetOptions<T>,
     ): Promise<GetResult<T>>;
   };
 };

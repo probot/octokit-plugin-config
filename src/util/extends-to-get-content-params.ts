@@ -11,7 +11,7 @@ const EXTENDS_REGEX = new RegExp(
     "([-_.\\w\\d]+)" + // project
     "(?::([-_./\\w\\d]+\\.ya?ml))?" + // filename
     "$",
-  "i"
+  "i",
 );
 
 /**
@@ -32,8 +32,8 @@ export function extendsToGetContentParams({
   if (typeof extendsValue !== "string") {
     throw new Error(
       `[@probot/octokit-plugin-config] Invalid value ${JSON.stringify(
-        extendsValue
-      )} for _extends in ${url}`
+        extendsValue,
+      )} for _extends in ${url}`,
     );
   }
 
@@ -41,7 +41,7 @@ export function extendsToGetContentParams({
 
   if (match === null) {
     throw new Error(
-      `[@probot/octokit-plugin-config] Invalid value "${extendsValue}" for _extends in ${url}`
+      `[@probot/octokit-plugin-config] Invalid value "${extendsValue}" for _extends in ${url}`,
     );
   }
 

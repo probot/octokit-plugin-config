@@ -23,7 +23,7 @@ type Options = {
  */
 export async function getConfigFiles(
   octokit: Octokit,
-  { owner, repo, path, branch }: Options
+  { owner, repo, path, branch }: Options,
 ): Promise<ConfigFile[]> {
   const requestedRepoFile = await getConfigFile(octokit, {
     owner,
@@ -92,12 +92,12 @@ export async function getConfigFiles(
       (file) =>
         file.owner === extendConfigOptions.owner &&
         file.repo === extendConfigOptions.repo &&
-        file.path === extendConfigOptions.path
+        file.path === extendConfigOptions.path,
     );
 
     if (alreadyLoaded) {
       throw new Error(
-        `[@probot/octokit-plugin-config] Recursion detected. Ignoring  "_extends: ${extendRepoConfig.config._extends}" from ${extendRepoConfig.url} because ${alreadyLoaded.url} was already loaded.`
+        `[@probot/octokit-plugin-config] Recursion detected. Ignoring  "_extends: ${extendRepoConfig.config._extends}" from ${extendRepoConfig.url} because ${alreadyLoaded.url} was already loaded.`,
       );
     }
   } while (true);
