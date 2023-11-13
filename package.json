@@ -23,6 +23,7 @@
     "@octokit/core": "^5.0.1",
     "@octokit/tsconfig": "^2.0.0",
     "@types/jest": "^29.0.0",
+    "@types/js-yaml": "^4.0.5",
     "@types/node": "^18.7.15",
     "esbuild": "^0.19.4",
     "fetch-mock": "npm:@gr2m/fetch-mock@9.11.0-pull-request-644.1",
@@ -93,7 +94,6 @@
     "access": "public"
   },
   "dependencies": {
-    "@types/js-yaml": "^4.0.5",
     "js-yaml": "^4.1.0"
   },
   "engines": {
