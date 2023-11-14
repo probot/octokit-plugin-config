@@ -1,7 +1,7 @@
 // @ts-check
 import esbuild from "esbuild";
 import { copyFile, readFile, writeFile, rm } from "fs/promises";
-import { glob } from "glob";
+import { globby } from "globby";
 
 /**
  * @type {esbuild.BuildOptions}
@@ -19,7 +19,7 @@ async function main() {
   await rm("pkg", { recursive: true, force: true });
   // Build the source code for a neutral platform as ESM
   await esbuild.build({
-    entryPoints: await glob(["./src/*.ts", "./src/**/*.ts"]),
+    entryPoints: await globby(["./src/*.ts", "./src/**/*.ts"]),
     outdir: "pkg/dist-src",
     bundle: false,
     platform: "neutral",
@@ -29,7 +29,7 @@ async function main() {
   });
 
   // Remove the types file from the dist-src folder
-  const typeFiles = await glob([
+  const typeFiles = await globby([
     "./pkg/dist-src/**/types.js.map",
     "./pkg/dist-src/**/types.js",
   ]);
