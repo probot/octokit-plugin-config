@@ -55,6 +55,8 @@ async function main() {
       {
         ...pkg,
         files: ["dist-*/**", "bin/**"],
+        // Tooling currently are having issues with the "exports" field, ex: TypeScript, eslint
+        // We add a `main` and `types` field to the package.json for the time being
         main: "dist-src/index.js",
         types: "dist-types/index.d.ts",
         exports: {
