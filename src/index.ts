@@ -1,8 +1,8 @@
 import { Octokit } from "@octokit/core";
 
-import { VERSION } from "./version";
-import { composeConfigGet } from "./compose-config-get";
-import type * as Types from "./types";
+import { VERSION } from "./version.js";
+import { composeConfigGet } from "./compose-config-get.js";
+import type * as Types from "./types.js";
 
 /**
  * @param octokit Octokit instance
@@ -19,7 +19,7 @@ export function config(octokit: Octokit): Types.API {
 
 config.VERSION = VERSION;
 
-export { composeConfigGet } from "./compose-config-get";
+export { composeConfigGet } from "./compose-config-get.js";
 
 export namespace createPullRequest {
   export type GetOptions<T extends Types.Configuration = Types.Configuration> =

@@ -1,7 +1,7 @@
 import { Octokit } from "@octokit/core";
 import yaml from "js-yaml";
 
-import type { Configuration, ConfigFile } from "../types";
+import type { Configuration, ConfigFile } from "../types.js";
 
 type Options = {
   owner: string;

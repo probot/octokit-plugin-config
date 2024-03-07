@@ -1,7 +1,7 @@
 import { Octokit } from "@octokit/core";
 import fetchMock from "fetch-mock";
 
-import { config } from "../src";
+import { config } from "../src/index.js";
 
 const TestOctokit = Octokit.plugin(config);
 

@@ -1,8 +1,8 @@
 import { Octokit } from "@octokit/core";
 
-import type { ConfigFile } from "../types";
-import { getConfigFile } from "./get-config-file";
-import { extendsToGetContentParams } from "./extends-to-get-content-params";
+import type { ConfigFile } from "../types.js";
+import { getConfigFile } from "./get-config-file.js";
+import { extendsToGetContentParams } from "./extends-to-get-content-params.js";
 
 type Options = {
   owner: string;

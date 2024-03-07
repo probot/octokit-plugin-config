@@ -1,7 +1,7 @@
 import { Octokit } from "@octokit/core";
 
-import { getConfigFiles } from "./util/get-config-files";
-import type { Configuration, GetOptions, GetResult } from "./types";
+import { getConfigFiles } from "./util/get-config-files.js";
+import type { Configuration, GetOptions, GetResult } from "./types.js";
 
 /**
  * Loads configuration from one or multiple files and resolves with
