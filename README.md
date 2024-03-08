@@ -51,7 +51,7 @@ const { config, composeConfigGet } = require("@probot/octokit-plugin-config");
 </table>
 
 ```js
-// given that `.github/my-app.yml` in `octocat/hello-world` has the following ocntent
+// given that `.github/my-app.yml` in `octocat/hello-world` has the following content
 //
 // comment: 'Thank you for creating the issue!'
 //
