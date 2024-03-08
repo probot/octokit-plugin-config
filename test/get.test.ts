@@ -2,8 +2,8 @@ import { Octokit } from "@octokit/core";
 import fetchMock from "fetch-mock";
 import stripIndent from "strip-indent";
 
-import { config } from "../src";
-import { Configuration } from "../src/types";
+import { config } from "../src/index.js";
+import type { Configuration } from "../src/types.js";
 
 const TestOctokit = Octokit.plugin(config);
 

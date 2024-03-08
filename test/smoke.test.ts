@@ -1,4 +1,4 @@
-import { config, composeConfigGet } from "../src";
+import { config, composeConfigGet } from "../src/index.js";
 
 describe("Smoke test", () => {
   it("config is a function", () => {
