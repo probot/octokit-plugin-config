@@ -61,7 +61,7 @@ async function main() {
         types: "dist-types/index.d.ts",
         exports: {
           ".": {
-            types: "./dist-src/index.js",
+            types: "./dist-types/index.d.ts",
             import: "./dist-src/index.js",
           },
         },
