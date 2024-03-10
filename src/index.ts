@@ -3,6 +3,7 @@ import { Octokit } from "@octokit/core";
 import { VERSION } from "./version.js";
 import { composeConfigGet } from "./compose-config-get.js";
 import type * as Types from "./types.js";
+export type * from "./types.js";
 
 /**
  * @param octokit Octokit instance
