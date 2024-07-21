@@ -117,7 +117,14 @@ const { config, files } = await octokit.config.get({
       <th><code>defaults</code></th>
       <td>String</td>
       <td>
-        Default options that are returned if the configuration file does not exist, or merged with the contents if it does exist. Defaults are merged shallowly using <code>Object.assign</code>. For custom merge strategies, you can set <code>defaults</code> to a function, see <a href="#custom-configuration-merging">Merging configuration</a> below for more information. Defaults to <code>{}</code>.
+        Default values that are returned if the configuration file does not exist. Defaults to <code>{}</code>.
+      </td>
+    </tr>
+    <tr>
+      <th><code>merge</code></th>
+      <td>Function</td>
+      <td>
+        Configurations are by default deepmerged using `@fastify/deepmerge`. For custom merge strategies, you can set <code>merge</code> to a function, see <a href="#custom-configuration-merging">Merging configuration</a> below for more information.
       </td>
     </tr>
     <tr>
@@ -198,28 +205,18 @@ const { config } = await octokit.config.get({
 
 The resulting `config` object is
 
-```js
+```json
 {
-  settings: {
-    one: "value from configuration";
+  "settings": {
+    "one": "value from configuration",
+    "two": "default value"
   }
 }
 ```
 
-And not as you might expect
+`octokit-plugin-config` merges the configurations with `@fastify/deepmerge`. If you want to use a different merge strategy, you can pass a custom merge function as the `merge` option.
 
-```js
-{
-  settings: {
-    one: "value from configuration";
-    two: "default value";
-  }
-}
-```
-
-The reason for that behavior is that merging objects deeply is not supported in JavaScript by default, and there are different strategies and many pitfals. There are many libraries that support deep merging in different ways, but instead making that decision for and significantly increasing the bundle size of this plugin, we let you pass a custom merge strategy instead.
-
-In order to achive the deeply merged configuration, the `defaults` option can be set to a function. The function receives one `configs` argument, which is an array of configurations loaded from files in reverse order, so that the latter items should take precedence over the former items. The `configs` array can have more than one object if [the `_extends` key](#extends) is used.
+The function receives one or many `configs` parameters, which are configurations loaded from files in reverse order, so that the latter items should take precedence over the former items. The `configs` array can have more than one object if [the `_extends` key](#extends) is used.
 
 ```js
 const defaults = {
@@ -232,8 +229,9 @@ const { config } = await octokit.config.get({
   owner,
   repo,
   path: ".github/test.yml",
-  defaults(configs) {
-    const allConfigs = [defaults, ...configs];
+  defaults,
+  merge(configs) {
+    const allConfigs = [...configs];
     const fileSettingsConfigs = allConfigs.map(
       (config: Configuration) => config.settings
     );
@@ -244,14 +242,15 @@ const { config } = await octokit.config.get({
 });
 ```
 
-Or simpler, using a library such as [deepmerge](https://github.com/TehShrike/deepmerge)
+Or simpler, if you want to only shallow copy the settings:
 
 ```js
 const { config } = await octokit.config.get({
   owner,
   repo,
   path: ".github/test.yml",
-  defaults: (configs) => deepmerge.all([defaults, ...configs]),
+  defaults,
+  merge: Object.assign,
 });
 ```
 

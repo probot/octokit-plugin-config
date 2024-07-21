@@ -27,7 +27,16 @@ export type GetOptions<T> = {
    * An object will be merged shallowly. Pass a function for deep merges and custom merge strategies,
    * @see https://github.com/probot/octokit-plugin-config/#merging-configuration
    */
-  defaults?: T | defaultsFunction<T>;
+  defaults?: T;
+
+  /**
+   * Custom merge function to combine multiple configurations.
+   */
+  merge?: mergeFunction<T>;
+
+  /**
+   * Branch to load configuration from
+   */
   branch?: string;
 };
 
@@ -65,4 +74,4 @@ export type ConfigFile = {
   config: Configuration | null;
 };
 
-export type defaultsFunction<T> = (files: Configuration[]) => T;
+export type mergeFunction<T> = (...configs: Configuration[]) => T;
