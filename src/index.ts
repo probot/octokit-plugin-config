@@ -1,9 +1,8 @@
-import { Octokit } from "@octokit/core";
-
-import { VERSION } from "./version.js";
-import { composeConfigGet } from "./compose-config-get.js";
+import type { Octokit } from "@octokit/core";
 import type * as Types from "./types.js";
 export type * from "./types.js";
+import { VERSION } from "./version.js";
+import { composeConfigGet } from "./compose-config-get.js";
 
 /**
  * @param octokit Octokit instance

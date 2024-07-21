@@ -1,4 +1,4 @@
-import { Octokit } from "@octokit/core";
+import type { Octokit } from "@octokit/core";
 import yaml from "js-yaml";
 
 import type { Configuration, ConfigFile } from "../types.js";
