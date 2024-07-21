@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`octokit.config.get .json extension: result 1`] = `
+exports[`octokit.config.get > .json extension > result 1`] = `
 {
   "config": {
     "comment": "Thank you for creating the issue!",
@@ -19,7 +19,7 @@ exports[`octokit.config.get .json extension: result 1`] = `
 }
 `;
 
-exports[`octokit.config.get .yaml extension: result 1`] = `
+exports[`octokit.config.get > .yaml extension > result 1`] = `
 {
   "config": {
     "comment": "Thank you for creating the issue!",
@@ -38,7 +38,7 @@ exports[`octokit.config.get .yaml extension: result 1`] = `
 }
 `;
 
-exports[`octokit.config.get _extends file is missing: result 1`] = `
+exports[`octokit.config.get > _extends file is missing > result 1`] = `
 {
   "config": {
     "setting1": "value from repo config file",
@@ -64,7 +64,37 @@ exports[`octokit.config.get _extends file is missing: result 1`] = `
 }
 `;
 
-exports[`octokit.config.get _extends: base -> _extends: base2: result 1`] = `
+exports[`octokit.config.get > _extends: base > result 1`] = `
+{
+  "config": {
+    "setting1": "value from repo config file",
+    "setting2": "value from base config file",
+  },
+  "files": [
+    {
+      "config": {
+        "setting1": "value from repo config file",
+      },
+      "owner": "octocat",
+      "path": ".github/my-app.yml",
+      "repo": "hello-world",
+      "url": "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
+    },
+    {
+      "config": {
+        "setting1": "value from base config file",
+        "setting2": "value from base config file",
+      },
+      "owner": "octocat",
+      "path": ".github/my-app.yml",
+      "repo": "base",
+      "url": "https://api.github.com/repos/octocat/base/contents/.github%2Fmy-app.yml",
+    },
+  ],
+}
+`;
+
+exports[`octokit.config.get > _extends: base -> _extends: base2 > result 1`] = `
 {
   "config": {
     "setting1": "value from repo config file",
@@ -106,7 +136,7 @@ exports[`octokit.config.get _extends: base -> _extends: base2: result 1`] = `
 }
 `;
 
-exports[`octokit.config.get _extends: base with defaults and custom merge: result 1`] = `
+exports[`octokit.config.get > _extends: base with defaults and custom merge > result 1`] = `
 {
   "config": {
     "otherSetting1": "value from repo config file",
@@ -149,37 +179,7 @@ exports[`octokit.config.get _extends: base with defaults and custom merge: resul
 }
 `;
 
-exports[`octokit.config.get _extends: base: result 1`] = `
-{
-  "config": {
-    "setting1": "value from repo config file",
-    "setting2": "value from base config file",
-  },
-  "files": [
-    {
-      "config": {
-        "setting1": "value from repo config file",
-      },
-      "owner": "octocat",
-      "path": ".github/my-app.yml",
-      "repo": "hello-world",
-      "url": "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
-    },
-    {
-      "config": {
-        "setting1": "value from base config file",
-        "setting2": "value from base config file",
-      },
-      "owner": "octocat",
-      "path": ".github/my-app.yml",
-      "repo": "base",
-      "url": "https://api.github.com/repos/octocat/base/contents/.github%2Fmy-app.yml",
-    },
-  ],
-}
-`;
-
-exports[`octokit.config.get _extends: base:test.yml: result 1`] = `
+exports[`octokit.config.get > _extends: base:test.yml > result 1`] = `
 {
   "config": {
     "setting1": "value from repo config file",
@@ -209,7 +209,7 @@ exports[`octokit.config.get _extends: base:test.yml: result 1`] = `
 }
 `;
 
-exports[`octokit.config.get _extends: other-owner/base: result 1`] = `
+exports[`octokit.config.get > _extends: other-owner/base > result 1`] = `
 {
   "config": {
     "setting1": "value from repo config file",
@@ -239,7 +239,7 @@ exports[`octokit.config.get _extends: other-owner/base: result 1`] = `
 }
 `;
 
-exports[`octokit.config.get _extends: other-owner/base:test.yml: result 1`] = `
+exports[`octokit.config.get > _extends: other-owner/base:test.yml > result 1`] = `
 {
   "config": {
     "setting1": "value from repo config file",
@@ -269,7 +269,7 @@ exports[`octokit.config.get _extends: other-owner/base:test.yml: result 1`] = `
 }
 `;
 
-exports[`octokit.config.get README simple usage example: result 1`] = `
+exports[`octokit.config.get > README simple usage example > result 1`] = `
 {
   "config": {
     "comment": "Thank you for creating the issue!",
@@ -288,7 +288,7 @@ exports[`octokit.config.get README simple usage example: result 1`] = `
 }
 `;
 
-exports[`octokit.config.get branch option: result 1`] = `
+exports[`octokit.config.get > branch option > result 1`] = `
 {
   "config": {
     "comment": "Thank you for creating the issue!",
@@ -307,7 +307,7 @@ exports[`octokit.config.get branch option: result 1`] = `
 }
 `;
 
-exports[`octokit.config.get config file is empty: result 1`] = `
+exports[`octokit.config.get > config file is empty > result 1`] = `
 {
   "config": {},
   "files": [
@@ -322,7 +322,7 @@ exports[`octokit.config.get config file is empty: result 1`] = `
 }
 `;
 
-exports[`octokit.config.get config file missing: result 1`] = `
+exports[`octokit.config.get > config file missing > result 1`] = `
 {
   "config": {
     "comment": "Thank you for creating the issue!",
@@ -346,7 +346,7 @@ exports[`octokit.config.get config file missing: result 1`] = `
 }
 `;
 
-exports[`octokit.config.get merges deeply using defaults function: result 1`] = `
+exports[`octokit.config.get > merges deeply using defaults function > result 1`] = `
 {
   "config": {
     "otherSetting1": "value from config file",
@@ -373,7 +373,27 @@ exports[`octokit.config.get merges deeply using defaults function: result 1`] = 
 }
 `;
 
-exports[`octokit.config.get merges defaults option from .github repository: result 1`] = `
+exports[`octokit.config.get > merges defaults option > result 1`] = `
+{
+  "config": {
+    "config": "value from .github/my-app.yml",
+    "otherConfig": "default value",
+  },
+  "files": [
+    {
+      "config": {
+        "config": "value from .github/my-app.yml",
+      },
+      "owner": "octocat",
+      "path": ".github/my-app.yml",
+      "repo": "hello-world",
+      "url": "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
+    },
+  ],
+}
+`;
+
+exports[`octokit.config.get > merges defaults option from .github repository > result 1`] = `
 {
   "config": {
     "config": "value from octocat/.github:.github/my-app.yml",
@@ -400,27 +420,7 @@ exports[`octokit.config.get merges defaults option from .github repository: resu
 }
 `;
 
-exports[`octokit.config.get merges defaults option: result 1`] = `
-{
-  "config": {
-    "config": "value from .github/my-app.yml",
-    "otherConfig": "default value",
-  },
-  "files": [
-    {
-      "config": {
-        "config": "value from .github/my-app.yml",
-      },
-      "owner": "octocat",
-      "path": ".github/my-app.yml",
-      "repo": "hello-world",
-      "url": "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
-    },
-  ],
-}
-`;
-
-exports[`octokit.config.get repo is .github: result 1`] = `
+exports[`octokit.config.get > repo is .github > result 1`] = `
 {
   "config": {},
   "files": [
@@ -435,7 +435,7 @@ exports[`octokit.config.get repo is .github: result 1`] = `
 }
 `;
 
-exports[`octokit.config.get resolves _extends in .github repository file: result 1`] = `
+exports[`octokit.config.get > resolves _extends in .github repository file > result 1`] = `
 {
   "config": {
     "config": "value from octocat/.github:.github/my-second-app.yml",
@@ -478,7 +478,7 @@ exports[`octokit.config.get resolves _extends in .github repository file: result
 }
 `;
 
-exports[`octokit.config.get returns defaults option when no config files exist: result 1`] = `
+exports[`octokit.config.get > returns defaults option when no config files exist > result 1`] = `
 {
   "config": {
     "comment": "Thank you for creating the issue!",
