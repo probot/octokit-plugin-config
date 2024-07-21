@@ -43,7 +43,7 @@ export async function getConfigFile(
     // this can be just `ref` once https://github.com/octokit/endpoint.js/issues/206 is resolved
     ...(ref ? { ref } : {}),
   };
-  const { url } = await octokit.request.endpoint(endpoint);
+  const { url } = octokit.request.endpoint(endpoint);
   const emptyConfigResult = {
     owner,
     repo,
