@@ -25,7 +25,7 @@
     "@types/js-yaml": "^4.0.5",
     "@types/node": "^20.0.0",
     "@vitest/coverage-v8": "^2.0.3",
-    "esbuild": "^0.23.0",
+    "esbuild": "^0.24.0",
     "fetch-mock": "^10.0.0",
     "globby": "^14.0.0",
     "prettier": "^3.0.0",
