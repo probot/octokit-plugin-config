@@ -1,6 +1,14 @@
 import type { Octokit } from "@octokit/core";
-import type { Configuration, GetOptions, GetResult } from "./types.js";
+import type {
+  Configuration,
+  GetOptions,
+  GetResult,
+  mergeFunction,
+} from "./types.js";
 import { getConfigFiles } from "./util/get-config-files.js";
+import { deepmerge } from "@fastify/deepmerge";
+
+const defaultMerge = deepmerge({ all: true });
 
 /**
  * Loads configuration from one or multiple files and resolves with
@@ -12,7 +20,14 @@ import { getConfigFiles } from "./util/get-config-files.js";
  */
 export async function composeConfigGet<T extends Configuration = Configuration>(
   octokit: Octokit,
-  { owner, repo, defaults, path, branch }: GetOptions<T>,
+  {
+    owner,
+    repo,
+    defaults = {} as T,
+    merge = defaultMerge as mergeFunction<T>,
+    path,
+    branch,
+  }: GetOptions<T>,
 ): Promise<GetResult<T>> {
   const files = await getConfigFiles(octokit, {
     owner,
@@ -28,9 +43,6 @@ export async function composeConfigGet<T extends Configuration = Configuration>(
 
   return {
     files,
-    config:
-      typeof defaults === "function"
-        ? defaults(configs)
-        : Object.assign({}, defaults, ...configs),
+    config: merge(defaults, ...(configs as Configuration[])) as T,
   };
 }

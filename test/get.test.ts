@@ -17,11 +17,8 @@ const NOT_FOUND_RESPONSE = {
   },
 };
 
-const deepMergeSettings = (
-  defaults: Configuration,
-  configs: Configuration[],
-) => {
-  const allConfigs = [defaults, ...configs];
+const customMerge = (...configs: Configuration[]) => {
+  const allConfigs = configs;
   const fileSettingsConfigs = allConfigs.map(
     (config: Configuration) => config.settings,
   );
@@ -250,7 +247,8 @@ describe("octokit.config.get", () => {
       owner: "octocat",
       repo: "hello-world",
       path: ".github/my-app.yml",
-      defaults: (configs) => deepMergeSettings(defaults, configs),
+      defaults,
+      merge: customMerge,
     });
 
     expect(result).toMatchSnapshot("result");
@@ -396,7 +394,8 @@ describe("octokit.config.get", () => {
       owner: "octocat",
       repo: "hello-world",
       path: ".github/my-app.yml",
-      defaults: (configs) => deepMergeSettings(defaults, configs),
+      defaults,
+      merge: customMerge,
     });
 
     expect(result).toMatchSnapshot("result");
@@ -962,6 +961,107 @@ describe("octokit.config.get", () => {
       );
     }
 
+    expect(mock.done()).toBe(true);
+  });
+
+  it("_extends: deepmerge", async () => {
+    const mock = fetchMock
+      .sandbox()
+      .get(
+        "https://api.github.com/repos/org/github-settings/contents/.github%2Fsettings.yml",
+        stripIndent(`
+        repository:
+          allow_squash_merge: true
+          allow_merge_commit: true
+          allow_rebase_merge: true
+      `),
+      )
+      .get(
+        "https://api.github.com/repos/org/repo-b/contents/.github%2Fsettings.yml",
+        stripIndent(`
+        _extends: github-settings
+        repository:
+          allow_rebase_merge: false
+      `),
+      )
+      .get(
+        "https://api.github.com/repos/org/repo-c/contents/.github%2Fsettings.yml",
+        stripIndent(`
+        _extends: repo-b
+        repository:
+          allow_squash_merge: false
+      `),
+      );
+
+    const octokit = new TestOctokit({
+      request: {
+        fetch: mock,
+      },
+    });
+    const result = await octokit.config.get({
+      owner: "org",
+      repo: "repo-c",
+      path: ".github/settings.yml",
+    });
+
+    expect(result.config).toEqual({
+      repository: {
+        allow_squash_merge: false,
+        allow_merge_commit: true,
+        allow_rebase_merge: false,
+      },
+    });
+    expect(result).toMatchSnapshot("result");
+    expect(mock.done()).toBe(true);
+  });
+
+  it("_extends: change to shallow copy with Object.assign", async () => {
+    const mock = fetchMock
+      .sandbox()
+      .get(
+        "https://api.github.com/repos/org/github-settings/contents/.github%2Fsettings.yml",
+        stripIndent(`
+      repository:
+        allow_squash_merge: true
+        allow_merge_commit: true
+        allow_rebase_merge: true
+    `),
+      )
+      .get(
+        "https://api.github.com/repos/org/repo-b/contents/.github%2Fsettings.yml",
+        stripIndent(`
+      _extends: github-settings
+      repository:
+        allow_rebase_merge: false
+    `),
+      )
+      .get(
+        "https://api.github.com/repos/org/repo-c/contents/.github%2Fsettings.yml",
+        stripIndent(`
+      _extends: repo-b
+      repository:
+        allow_squash_merge: false
+    `),
+      );
+
+    const octokit = new TestOctokit({
+      request: {
+        fetch: mock,
+      },
+    });
+    const result = await octokit.config.get({
+      owner: "org",
+      repo: "repo-c",
+      path: ".github/settings.yml",
+      merge: Object.assign,
+    });
+
+    expect(result.config).toEqual({
+      repository: {
+        allow_squash_merge: false,
+      },
+    });
+    expect(result).toMatchSnapshot("result");
     expect(mock.done()).toBe(true);
   });
 });
