@@ -29,7 +29,7 @@
     "fetch-mock": "^10.0.0",
     "globby": "^14.0.0",
     "prettier": "^3.0.0",
-    "semantic-release-plugin-update-version-in-files": "^1.1.0",
+    "semantic-release-plugin-update-version-in-files": "^2.0.0",
     "strip-indent": "^4.0.0",
     "typescript": "^5.0.0",
     "vitest": "^3.0.0"
