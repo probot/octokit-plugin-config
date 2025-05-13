@@ -1,6 +1,7 @@
 {
   "extends": "@octokit/tsconfig",
   "compilerOptions": {
+    "allowImportingTsExtensions": true,
     "esModuleInterop": true,
     "declaration": true,
     "outDir": "pkg/dist-types",

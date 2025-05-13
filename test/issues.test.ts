@@ -1,16 +1,16 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, equal, assert } from "./testrunner.ts";
 import { Octokit } from "@octokit/core";
 import fetchMock from "fetch-mock";
 
-import { config } from "../src/index.js";
+import { config } from "../src/index.ts";
 
 const TestOctokit = Octokit.plugin(config);
 
 describe("issues", () => {
   it("#91 sets incorrect accept header when media type previews are set", async () => {
-    const mock = fetchMock.sandbox().getOnce((_url, { headers }) => {
+    const mock = fetchMock.sandbox().getOnce((_url: string, { headers }) => {
       // @ts-ignore TypeScript says we can't do this but turns out we can so there you go
-      expect(headers["accept"]).toEqual("application/vnd.github.v3.raw");
+      equal(headers["accept"], "application/vnd.github.v3.raw");
       return true;
     }, "foo: bar");
     const octokit = new TestOctokit({
@@ -26,6 +26,6 @@ describe("issues", () => {
       path: "config.yaml",
     });
 
-    expect(mock.done()).toBe(true);
+    assert(mock.done());
   });
 });

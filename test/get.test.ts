@@ -1,10 +1,10 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, assert, equal, deepEqual } from "./testrunner.ts";
 import { Octokit } from "@octokit/core";
 import fetchMock from "fetch-mock";
 import stripIndent from "strip-indent";
 
-import { config } from "../src/index.js";
-import type { Configuration } from "../src/types.js";
+import { config } from "../src/index.ts";
+import type { Configuration } from "../src/types.ts";
 
 const TestOctokit = Octokit.plugin(config);
 
@@ -55,8 +55,23 @@ describe("octokit.config.get", () => {
       path: ".github/my-app.yml",
     });
 
-    expect(result).toMatchSnapshot("result");
-    expect(mock.done()).toBe(true);
+    deepEqual(result, {
+      config: {
+        comment: "Thank you for creating the issue!",
+      },
+      files: [
+        {
+          config: {
+            comment: "Thank you for creating the issue!",
+          },
+          owner: "octocat",
+          path: ".github/my-app.yml",
+          repo: "hello-world",
+          url: "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
+        },
+      ],
+    });
+    assert(mock.done());
   });
 
   it("config file missing", async () => {
@@ -86,8 +101,28 @@ describe("octokit.config.get", () => {
       },
     });
 
-    expect(result).toMatchSnapshot("result");
-    expect(mock.done()).toBe(true);
+    deepEqual(result, {
+      config: {
+        comment: "Thank you for creating the issue!",
+      },
+      files: [
+        {
+          config: null,
+          owner: "octocat",
+          path: ".github/my-app.yml",
+          repo: "hello-world",
+          url: "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
+        },
+        {
+          config: null,
+          owner: "octocat",
+          path: ".github/my-app.yml",
+          repo: ".github",
+          url: "https://api.github.com/repos/octocat/.github/contents/.github%2Fmy-app.yml",
+        },
+      ],
+    });
+    assert(mock.done());
   });
 
   it("returns defaults option when no config files exist", async () => {
@@ -117,8 +152,28 @@ describe("octokit.config.get", () => {
       },
     });
 
-    expect(result).toMatchSnapshot("result");
-    expect(mock.done()).toBe(true);
+    deepEqual(result, {
+      config: {
+        comment: "Thank you for creating the issue!",
+      },
+      files: [
+        {
+          config: null,
+          owner: "octocat",
+          path: ".github/my-app.yml",
+          repo: "hello-world",
+          url: "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
+        },
+        {
+          config: null,
+          owner: "octocat",
+          path: ".github/my-app.yml",
+          repo: ".github",
+          url: "https://api.github.com/repos/octocat/.github/contents/.github%2Fmy-app.yml",
+        },
+      ],
+    });
+    assert(mock.done());
   });
 
   it("merges defaults option", async () => {
@@ -145,8 +200,24 @@ describe("octokit.config.get", () => {
       },
     });
 
-    expect(result).toMatchSnapshot("result");
-    expect(mock.done()).toBe(true);
+    deepEqual(result, {
+      config: {
+        config: "value from .github/my-app.yml",
+        otherConfig: "default value",
+      },
+      files: [
+        {
+          config: {
+            config: "value from .github/my-app.yml",
+          },
+          owner: "octocat",
+          path: ".github/my-app.yml",
+          repo: "hello-world",
+          url: "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
+        },
+      ],
+    });
+    assert(mock.done());
   });
 
   it("merges defaults option from .github repository", async () => {
@@ -177,8 +248,31 @@ describe("octokit.config.get", () => {
       },
     });
 
-    expect(result).toMatchSnapshot("result");
-    expect(mock.done()).toBe(true);
+    deepEqual(result, {
+      config: {
+        config: "value from octocat/.github:.github/my-app.yml",
+        otherConfig: "default value",
+      },
+      files: [
+        {
+          config: null,
+          owner: "octocat",
+          path: ".github/my-app.yml",
+          repo: "hello-world",
+          url: "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
+        },
+        {
+          config: {
+            config: "value from octocat/.github:.github/my-app.yml",
+          },
+          owner: "octocat",
+          path: ".github/my-app.yml",
+          repo: ".github",
+          url: "https://api.github.com/repos/octocat/.github/contents/.github%2Fmy-app.yml",
+        },
+      ],
+    });
+    assert(mock.done());
   });
 
   it("resolves _extends in .github repository file", async () => {
@@ -219,8 +313,48 @@ describe("octokit.config.get", () => {
       },
     });
 
-    expect(result).toMatchSnapshot("result");
-    expect(mock.done()).toBe(true);
+    deepEqual(result, {
+      config: {
+        config: "value from octocat/.github:.github/my-second-app.yml",
+        otherConfig: "value from octocat/hello-world:.github/my-third-app.yml",
+      },
+      files: [
+        {
+          config: null,
+          owner: "octocat",
+          path: ".github/my-app.yml",
+          repo: "hello-world",
+          url: "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
+        },
+        {
+          config: {},
+          owner: "octocat",
+          path: ".github/my-app.yml",
+          repo: ".github",
+          url: "https://api.github.com/repos/octocat/.github/contents/.github%2Fmy-app.yml",
+        },
+        {
+          config: {
+            config: "value from octocat/.github:.github/my-second-app.yml",
+          },
+          owner: "octocat",
+          path: ".github/my-second-app.yml",
+          repo: ".github",
+          url: "https://api.github.com/repos/octocat/.github/contents/.github%2Fmy-second-app.yml",
+        },
+        {
+          config: {
+            otherConfig:
+              "value from octocat/hello-world:.github/my-third-app.yml",
+          },
+          owner: "octocat",
+          path: ".github/my-third-app.yml",
+          repo: "hello-world",
+          url: "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-third-app.yml",
+        },
+      ],
+    });
+    assert(mock.done());
   });
 
   it("merges deeply using defaults function", async () => {
@@ -253,8 +387,31 @@ describe("octokit.config.get", () => {
       defaults: (configs) => deepMergeSettings(defaults, configs),
     });
 
-    expect(result).toMatchSnapshot("result");
-    expect(mock.done()).toBe(true);
+    deepEqual(result, {
+      config: {
+        otherSetting1: "value from config file",
+        otherSetting2: "default value",
+        settings: {
+          one: "value from config file",
+          two: "default value",
+        },
+      },
+      files: [
+        {
+          config: {
+            otherSetting1: "value from config file",
+            settings: {
+              one: "value from config file",
+            },
+          },
+          owner: "octocat",
+          path: ".github/my-app.yml",
+          repo: "hello-world",
+          url: "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
+        },
+      ],
+    });
+    assert(mock.done());
   });
 
   it("branch option", async () => {
@@ -282,8 +439,23 @@ describe("octokit.config.get", () => {
       branch: "my-branch",
     });
 
-    expect(result).toMatchSnapshot("result");
-    expect(mock.done()).toBe(true);
+    deepEqual(result, {
+      config: {
+        comment: "Thank you for creating the issue!",
+      },
+      files: [
+        {
+          config: {
+            comment: "Thank you for creating the issue!",
+          },
+          owner: "octocat",
+          path: ".github/my-app.yml",
+          repo: "hello-world",
+          url: "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml?ref=my-branch",
+        },
+      ],
+    });
+    assert(mock.done());
   });
 
   it("_extends: base", async () => {
@@ -313,8 +485,34 @@ describe("octokit.config.get", () => {
       path: ".github/my-app.yml",
     });
 
-    expect(result).toMatchSnapshot("result");
-    expect(mock.done()).toBe(true);
+    deepEqual(result, {
+      config: {
+        setting1: "value from repo config file",
+        setting2: "value from base config file",
+      },
+      files: [
+        {
+          config: {
+            setting1: "value from repo config file",
+          },
+          owner: "octocat",
+          path: ".github/my-app.yml",
+          repo: "hello-world",
+          url: "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
+        },
+        {
+          config: {
+            setting1: "value from base config file",
+            setting2: "value from base config file",
+          },
+          owner: "octocat",
+          path: ".github/my-app.yml",
+          repo: "base",
+          url: "https://api.github.com/repos/octocat/base/contents/.github%2Fmy-app.yml",
+        },
+      ],
+    });
+    assert(mock.done());
   });
 
   it("_extends: base -> _extends: base2", async () => {
@@ -352,8 +550,46 @@ describe("octokit.config.get", () => {
       path: ".github/my-app.yml",
     });
 
-    expect(result).toMatchSnapshot("result");
-    expect(mock.done()).toBe(true);
+    deepEqual(result, {
+      config: {
+        setting1: "value from repo config file",
+        setting2: "value from base1 config file",
+        setting3: "value from base2 config file",
+      },
+      files: [
+        {
+          config: {
+            setting1: "value from repo config file",
+          },
+          owner: "octocat",
+          path: ".github/my-app.yml",
+          repo: "hello-world",
+          url: "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
+        },
+        {
+          config: {
+            setting1: "value from base1 config file",
+            setting2: "value from base1 config file",
+          },
+          owner: "octocat",
+          path: ".github/my-app.yml",
+          repo: "base",
+          url: "https://api.github.com/repos/octocat/base/contents/.github%2Fmy-app.yml",
+        },
+        {
+          config: {
+            setting1: "value from base2 config file",
+            setting2: "value from base2 config file",
+            setting3: "value from base2 config file",
+          },
+          owner: "octocat",
+          path: ".github/my-app.yml",
+          repo: "base2",
+          url: "https://api.github.com/repos/octocat/base2/contents/.github%2Fmy-app.yml",
+        },
+      ],
+    });
+    assert(mock.done());
   });
 
   it("_extends: base with defaults and custom merge", async () => {
@@ -399,13 +635,50 @@ describe("octokit.config.get", () => {
       defaults: (configs) => deepMergeSettings(defaults, configs),
     });
 
-    expect(result).toMatchSnapshot("result");
-    expect(mock.done()).toBe(true);
+    deepEqual(result, {
+      config: {
+        otherSetting1: "value from repo config file",
+        otherSetting2: "value from base config file",
+        otherSetting3: "default value",
+        settings: {
+          one: "value from repo config file",
+          three: "default value",
+          two: "value from base config file",
+        },
+      },
+      files: [
+        {
+          config: {
+            otherSetting1: "value from repo config file",
+            settings: {
+              one: "value from repo config file",
+            },
+          },
+          owner: "octocat",
+          path: ".github/my-app.yml",
+          repo: "hello-world",
+          url: "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
+        },
+        {
+          config: {
+            otherSetting1: "value from base config file",
+            otherSetting2: "value from base config file",
+            settings: {
+              one: "value from base config file",
+              two: "value from base config file",
+            },
+          },
+          owner: "octocat",
+          path: ".github/my-app.yml",
+          repo: "base",
+          url: "https://api.github.com/repos/octocat/base/contents/.github%2Fmy-app.yml",
+        },
+      ],
+    });
+    assert(mock.done());
   });
 
   it("config file is a submodule", async () => {
-    expect.assertions(2);
-
     const mock = fetchMock
       .sandbox()
       .getOnce(
@@ -431,12 +704,13 @@ describe("octokit.config.get", () => {
         path: ".github/my-app.yml",
       });
     } catch (error: any) {
-      expect(error.message).toMatchInlineSnapshot(
-        `"[@probot/octokit-plugin-config] https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml exists, but is either a directory or a submodule. Ignoring."`,
+      equal(
+        error.message,
+        `[@probot/octokit-plugin-config] https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml exists, but is either a directory or a submodule. Ignoring.`,
       );
     }
 
-    expect(mock.done()).toBe(true);
+    assert(mock.done());
   });
 
   it("config file is empty", async () => {
@@ -459,8 +733,19 @@ describe("octokit.config.get", () => {
       path: ".github/my-app.yml",
     });
 
-    expect(result).toMatchSnapshot("result");
-    expect(mock.done()).toBe(true);
+    deepEqual(result, {
+      config: {},
+      files: [
+        {
+          config: {},
+          owner: "octocat",
+          path: ".github/my-app.yml",
+          repo: "hello-world",
+          url: "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
+        },
+      ],
+    });
+    assert(mock.done());
   });
 
   it("repo is .github", async () => {
@@ -483,8 +768,19 @@ describe("octokit.config.get", () => {
       path: ".github/my-app.yml",
     });
 
-    expect(result).toMatchSnapshot("result");
-    expect(mock.done()).toBe(true);
+    deepEqual(result, {
+      config: {},
+      files: [
+        {
+          config: null,
+          owner: "octocat",
+          path: ".github/my-app.yml",
+          repo: ".github",
+          url: "https://api.github.com/repos/octocat/.github/contents/.github%2Fmy-app.yml",
+        },
+      ],
+    });
+    assert(mock.done());
   });
 
   it("_extends file is missing", async () => {
@@ -512,13 +808,33 @@ describe("octokit.config.get", () => {
       path: ".github/my-app.yml",
     });
 
-    expect(result).toMatchSnapshot("result");
-    expect(mock.done()).toBe(true);
+    deepEqual(result, {
+      config: {
+        setting1: "value from repo config file",
+      },
+      files: [
+        {
+          config: {
+            setting1: "value from repo config file",
+          },
+          owner: "octocat",
+          path: ".github/my-app.yml",
+          repo: "hello-world",
+          url: "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
+        },
+        {
+          config: null,
+          owner: "octocat",
+          path: ".github/my-app.yml",
+          repo: "base",
+          url: "https://api.github.com/repos/octocat/base/contents/.github%2Fmy-app.yml",
+        },
+      ],
+    });
+    assert(mock.done());
   });
 
   it("request error", async () => {
-    expect.assertions(2);
-
     const mock = fetchMock
       .sandbox()
       .getOnce(
@@ -541,15 +857,13 @@ describe("octokit.config.get", () => {
         path: ".github/my-app.yml",
       });
     } catch (error: any) {
-      expect(error.status).toEqual(500);
+      equal(error.status, 500);
     }
 
-    expect(mock.done()).toBe(true);
+    assert(mock.done());
   });
 
   it("recursion", async () => {
-    expect.assertions(2);
-
     const mock = fetchMock
       .sandbox()
       .getOnce(
@@ -583,12 +897,13 @@ describe("octokit.config.get", () => {
         path: ".github/my-app.yml",
       });
     } catch (error: any) {
-      expect(error.message).toMatchInlineSnapshot(
-        `"[@probot/octokit-plugin-config] Recursion detected. Ignoring  "_extends: undefined" from https://api.github.com/repos/octocat/base/contents/.github%2Fmy-app.yml because https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml was already loaded."`,
+      equal(
+        error.message,
+        `[@probot/octokit-plugin-config] Recursion detected. Ignoring  "_extends: undefined" from https://api.github.com/repos/octocat/base/contents/.github%2Fmy-app.yml because https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml was already loaded.`,
       );
     }
 
-    expect(mock.done()).toBe(true);
+    assert(mock.done());
   });
 
   it(".yaml extension", async () => {
@@ -615,8 +930,23 @@ describe("octokit.config.get", () => {
       path: ".github/my-app.yaml",
     });
 
-    expect(result).toMatchSnapshot("result");
-    expect(mock.done()).toBe(true);
+    deepEqual(result, {
+      config: {
+        comment: "Thank you for creating the issue!",
+      },
+      files: [
+        {
+          config: {
+            comment: "Thank you for creating the issue!",
+          },
+          owner: "octocat",
+          path: ".github/my-app.yaml",
+          repo: "hello-world",
+          url: "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yaml",
+        },
+      ],
+    });
+    assert(mock.done());
   });
 
   it(".json extension", async () => {
@@ -641,13 +971,26 @@ describe("octokit.config.get", () => {
       path: ".github/my-app.json",
     });
 
-    expect(result).toMatchSnapshot("result");
-    expect(mock.done()).toBe(true);
+    deepEqual(result, {
+      config: {
+        comment: "Thank you for creating the issue!",
+      },
+      files: [
+        {
+          config: {
+            comment: "Thank you for creating the issue!",
+          },
+          owner: "octocat",
+          path: ".github/my-app.json",
+          repo: "hello-world",
+          url: "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.json",
+        },
+      ],
+    });
+    assert(mock.done());
   });
 
   it(".unknown extension", async () => {
-    expect.assertions(1);
-
     const octokit = new TestOctokit();
 
     try {
@@ -657,15 +1000,14 @@ describe("octokit.config.get", () => {
         path: ".github/my-app.unknown",
       });
     } catch (error: any) {
-      expect(error.message).toEqual(
+      equal(
+        error.message,
         '[@probot/octokit-plugin-config] .unknown extension is not support for configuration (path: ".github/my-app.unknown")',
       );
     }
   });
 
   it("malformed json", async () => {
-    expect.assertions(2);
-
     const mock = fetchMock
       .sandbox()
       .getOnce(
@@ -690,17 +1032,16 @@ describe("octokit.config.get", () => {
         path: ".github/my-app.json",
       });
     } catch (error: any) {
-      expect(error.message).toMatchInlineSnapshot(
-        `"[@probot/octokit-plugin-config] Configuration could not be parsed from https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.json (invalid JSON)"`,
+      equal(
+        error.message,
+        `[@probot/octokit-plugin-config] Configuration could not be parsed from https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.json (invalid JSON)`,
       );
     }
 
-    expect(mock.done()).toBe(true);
+    assert(mock.done());
   });
 
   it("malformed yaml", async () => {
-    expect.assertions(2);
-
     const mock = fetchMock
       .sandbox()
       .getOnce(
@@ -725,17 +1066,16 @@ describe("octokit.config.get", () => {
         path: ".github/my-app.yaml",
       });
     } catch (error: any) {
-      expect(error.message).toMatchInlineSnapshot(
-        `"[@probot/octokit-plugin-config] Configuration could not be parsed from https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yaml (YAML is not an object)"`,
+      equal(
+        error.message,
+        `[@probot/octokit-plugin-config] Configuration could not be parsed from https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yaml (YAML is not an object)`,
       );
     }
 
-    expect(mock.done()).toBe(true);
+    assert(mock.done());
   });
 
   it("malformed yaml: @", async () => {
-    expect.assertions(2);
-
     const mock = fetchMock
       .sandbox()
       .getOnce(
@@ -760,16 +1100,15 @@ describe("octokit.config.get", () => {
         path: ".github/my-app.yaml",
       });
     } catch (error: any) {
-      expect(error.message).toMatchInlineSnapshot(
-        `"[@probot/octokit-plugin-config] Configuration could not be parsed from https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yaml (invalid YAML)"`,
+      equal(
+        error.message,
+        `[@probot/octokit-plugin-config] Configuration could not be parsed from https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yaml (invalid YAML)`,
       );
     }
 
-    expect(mock.done()).toBe(true);
+    assert(mock.done());
   });
   it("unsafe yaml", async () => {
-    expect.assertions(2);
-
     const mock = fetchMock
       .sandbox()
       .getOnce(
@@ -794,12 +1133,13 @@ describe("octokit.config.get", () => {
         path: ".github/my-app.yaml",
       });
     } catch (error: any) {
-      expect(error.message).toMatchInlineSnapshot(
-        `"[@probot/octokit-plugin-config] Configuration could not be parsed from https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yaml (unsafe YAML)"`,
+      equal(
+        error.message,
+        `[@probot/octokit-plugin-config] Configuration could not be parsed from https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yaml (unsafe YAML)`,
       );
     }
 
-    expect(mock.done()).toBe(true);
+    assert(mock.done());
   });
 
   it("_extends: other-owner/base", async () => {
@@ -831,8 +1171,34 @@ describe("octokit.config.get", () => {
       path: ".github/my-app.yml",
     });
 
-    expect(result).toMatchSnapshot("result");
-    expect(mock.done()).toBe(true);
+    deepEqual(result, {
+      config: {
+        setting1: "value from repo config file",
+        setting2: "value from base config file",
+      },
+      files: [
+        {
+          config: {
+            setting1: "value from repo config file",
+          },
+          owner: "octocat",
+          path: ".github/my-app.yml",
+          repo: "hello-world",
+          url: "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
+        },
+        {
+          config: {
+            setting1: "value from base config file",
+            setting2: "value from base config file",
+          },
+          owner: "other-owner",
+          path: ".github/my-app.yml",
+          repo: "base",
+          url: "https://api.github.com/repos/other-owner/base/contents/.github%2Fmy-app.yml",
+        },
+      ],
+    });
+    assert(mock.done());
   });
 
   it("_extends: base:test.yml", async () => {
@@ -864,8 +1230,34 @@ describe("octokit.config.get", () => {
       path: ".github/my-app.yml",
     });
 
-    expect(result).toMatchSnapshot("result");
-    expect(mock.done()).toBe(true);
+    deepEqual(result, {
+      config: {
+        setting1: "value from repo config file",
+        setting2: "value from base config file",
+      },
+      files: [
+        {
+          config: {
+            setting1: "value from repo config file",
+          },
+          owner: "octocat",
+          path: ".github/my-app.yml",
+          repo: "hello-world",
+          url: "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
+        },
+        {
+          config: {
+            setting1: "value from base config file",
+            setting2: "value from base config file",
+          },
+          owner: "octocat",
+          path: "test.yml",
+          repo: "base",
+          url: "https://api.github.com/repos/octocat/base/contents/test.yml",
+        },
+      ],
+    });
+    assert(mock.done());
   });
 
   it("_extends: other-owner/base:test.yml", async () => {
@@ -897,13 +1289,37 @@ describe("octokit.config.get", () => {
       path: ".github/my-app.yml",
     });
 
-    expect(result).toMatchSnapshot("result");
-    expect(mock.done()).toBe(true);
+    deepEqual(result, {
+      config: {
+        setting1: "value from repo config file",
+        setting2: "value from base config file",
+      },
+      files: [
+        {
+          config: {
+            setting1: "value from repo config file",
+          },
+          owner: "octocat",
+          path: ".github/my-app.yml",
+          repo: "hello-world",
+          url: "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
+        },
+        {
+          config: {
+            setting1: "value from base config file",
+            setting2: "value from base config file",
+          },
+          owner: "other-owner",
+          path: "test.yml",
+          repo: "base",
+          url: "https://api.github.com/repos/other-owner/base/contents/test.yml",
+        },
+      ],
+    });
+    assert(mock.done());
   });
 
   it("_extends: invalid!", async () => {
-    expect.assertions(2);
-
     const mock = fetchMock.sandbox().getOnce(
       "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
       stripIndent(`
@@ -925,17 +1341,16 @@ describe("octokit.config.get", () => {
         path: ".github/my-app.yml",
       });
     } catch (error: any) {
-      expect(error.message).toMatchInlineSnapshot(
-        `"[@probot/octokit-plugin-config] Invalid value "invalid!" for _extends in https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml"`,
+      equal(
+        error.message,
+        `[@probot/octokit-plugin-config] Invalid value "invalid!" for _extends in https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml`,
       );
     }
 
-    expect(mock.done()).toBe(true);
+    assert(mock.done());
   });
 
   it("_extends: { nope }", async () => {
-    expect.assertions(2);
-
     const mock = fetchMock.sandbox().getOnce(
       "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
       stripIndent(`
@@ -957,11 +1372,12 @@ describe("octokit.config.get", () => {
         path: ".github/my-app.yml",
       });
     } catch (error: any) {
-      expect(error.message).toMatchInlineSnapshot(
-        `"[@probot/octokit-plugin-config] Invalid value {"nope":null} for _extends in https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml"`,
+      equal(
+        error.message,
+        `[@probot/octokit-plugin-config] Invalid value {"nope":null} for _extends in https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml`,
       );
     }
 
-    expect(mock.done()).toBe(true);
+    assert(mock.done());
   });
 });

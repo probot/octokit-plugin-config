@@ -1,16 +1,16 @@
-import { describe, it, expect } from "vitest";
-import { config, composeConfigGet } from "../src/index.js";
+import { describe, it, assert, equal } from "./testrunner.ts";
+import { config, composeConfigGet } from "../src/index.ts";
 
 describe("Smoke test", () => {
   it("config is a function", () => {
-    expect(config).toBeInstanceOf(Function);
+    assert(config instanceof Function);
   });
 
   it("config.VERSION is set", () => {
-    expect(config.VERSION).toEqual("0.0.0-development");
+    equal(config.VERSION, "0.0.0-development");
   });
 
   it("composeConfigGet is a function", () => {
-    expect(composeConfigGet).toBeInstanceOf(Function);
+    assert(composeConfigGet instanceof Function);
   });
 });
