@@ -6,8 +6,7 @@ let describe: Function,
   it: Function,
   assert: Function,
   equal: Function,
-  deepEqual: Function,
-  expect: Function;
+  deepEqual: Function;
 if ("Bun" in globalThis) {
   describe = function describe(name: string, fn: Function) {
     return globalThis.Bun.jest(caller()).describe(name, fn);
@@ -60,7 +59,8 @@ if ("Bun" in globalThis) {
   describe = await import("vitest").then((module) => module.describe);
   it = await import("vitest").then((module) => module.it);
   assert = await import("vitest").then((module) => module.assert);
-  expect = await import("vitest").then((module) => module.expect);
+
+  const expect = await import("vitest").then((module) => module.expect);
   equal = (value: unknown, message?: string) => {
     return expect(value, message).toEqual(value, true);
   };
