@@ -209,6 +209,102 @@ exports[`octokit.config.get > _extends: base:test.yml > result 1`] = `
 }
 `;
 
+exports[`octokit.config.get > _extends: change to shallow copy with Object.assign > result 1`] = `
+{
+  "config": {
+    "repository": {
+      "allow_squash_merge": false,
+    },
+  },
+  "files": [
+    {
+      "config": {
+        "repository": {
+          "allow_squash_merge": false,
+        },
+      },
+      "owner": "org",
+      "path": ".github/settings.yml",
+      "repo": "repo-c",
+      "url": "https://api.github.com/repos/org/repo-c/contents/.github%2Fsettings.yml",
+    },
+    {
+      "config": {
+        "repository": {
+          "allow_rebase_merge": false,
+        },
+      },
+      "owner": "org",
+      "path": ".github/settings.yml",
+      "repo": "repo-b",
+      "url": "https://api.github.com/repos/org/repo-b/contents/.github%2Fsettings.yml",
+    },
+    {
+      "config": {
+        "repository": {
+          "allow_merge_commit": true,
+          "allow_rebase_merge": true,
+          "allow_squash_merge": true,
+        },
+      },
+      "owner": "org",
+      "path": ".github/settings.yml",
+      "repo": "github-settings",
+      "url": "https://api.github.com/repos/org/github-settings/contents/.github%2Fsettings.yml",
+    },
+  ],
+}
+`;
+
+exports[`octokit.config.get > _extends: deepmerge > result 1`] = `
+{
+  "config": {
+    "repository": {
+      "allow_merge_commit": true,
+      "allow_rebase_merge": false,
+      "allow_squash_merge": false,
+    },
+  },
+  "files": [
+    {
+      "config": {
+        "repository": {
+          "allow_squash_merge": false,
+        },
+      },
+      "owner": "org",
+      "path": ".github/settings.yml",
+      "repo": "repo-c",
+      "url": "https://api.github.com/repos/org/repo-c/contents/.github%2Fsettings.yml",
+    },
+    {
+      "config": {
+        "repository": {
+          "allow_rebase_merge": false,
+        },
+      },
+      "owner": "org",
+      "path": ".github/settings.yml",
+      "repo": "repo-b",
+      "url": "https://api.github.com/repos/org/repo-b/contents/.github%2Fsettings.yml",
+    },
+    {
+      "config": {
+        "repository": {
+          "allow_merge_commit": true,
+          "allow_rebase_merge": true,
+          "allow_squash_merge": true,
+        },
+      },
+      "owner": "org",
+      "path": ".github/settings.yml",
+      "repo": "github-settings",
+      "url": "https://api.github.com/repos/org/github-settings/contents/.github%2Fsettings.yml",
+    },
+  ],
+}
+`;
+
 exports[`octokit.config.get > _extends: other-owner/base > result 1`] = `
 {
   "config": {
