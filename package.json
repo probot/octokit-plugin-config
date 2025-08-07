@@ -34,7 +34,7 @@
     "vitest": "^3.0.0"
   },
   "peerDependencies": {
-    "@octokit/core": ">=5"
+    "@octokit/core": ">=7"
   },
   "release": {
     "branches": [
@@ -75,6 +75,6 @@
     "js-yaml": "^4.1.0"
   },
   "engines": {
-    "node": ">=18"
+    "node": "^20.18.1 || >= 22"
   }
 }
