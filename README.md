@@ -20,15 +20,15 @@ Browsers
 
 </th><td width=100%>
 
-Load `@probot/octokit-plugin-config` and [`@octokit/core`](https://github.com/octokit/core.js) (or core-compatible module) directly from [cdn.pika.dev](https://cdn.pika.dev)
+Load `@probot/octokit-plugin-config` and [`@octokit/core`](https://github.com/octokit/core.js) (or core-compatible module) directly from [esm.sh](https://esm.sh)
 
 ```html
 <script type="module">
-  import { Octokit } from "https://cdn.pika.dev/@octokit/core";
+  import { Octokit } from "https://esm.sh/@octokit/core";
   import {
     config,
     composeConfigGet,
-  } from "https://cdn.pika.dev/@probot/octokit-plugin-config";
+  } from "https://esm.sh/@probot/octokit-plugin-config";
 </script>
 ```
 
@@ -42,8 +42,8 @@ Node
 Install with `npm install @octokit/core @probot/octokit-plugin-config`. Optionally replace `@octokit/core` with a compatible module
 
 ```js
-const { Octokit } = require("@octokit/core");
-const { config, composeConfigGet } = require("@probot/octokit-plugin-config");
+import { Octokit } from "@octokit/core";
+import { config, composeConfigGet } from "@probot/octokit-plugin-config";
 ```
 
 </td></tr>
