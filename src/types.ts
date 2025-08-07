@@ -27,8 +27,8 @@ export type GetOptions<T> = {
    * An object will be merged shallowly. Pass a function for deep merges and custom merge strategies,
    * @see https://github.com/probot/octokit-plugin-config/#merging-configuration
    */
-  defaults?: T | defaultsFunction<T>;
-  branch?: string;
+  defaults?: T | defaultsFunction<T> | undefined;
+  branch?: string | undefined;
 };
 
 export type GetResult<T> = {

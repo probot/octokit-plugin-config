@@ -7,7 +7,7 @@ type Options = {
   owner: string;
   repo: string;
   path: string;
-  ref?: string;
+  ref?: string | undefined;
 };
 
 const SUPPORTED_FILE_EXTENSIONS = ["json", "yml", "yaml"];
