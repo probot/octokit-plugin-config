@@ -767,7 +767,7 @@ describe("octokit.config.get", () => {
 
     expect(mock.done()).toBe(true);
   });
-  it("unsafe yaml", async () => {
+  it("unsafe yaml - potential serialized function stays a string", async () => {
     expect.assertions(2);
 
     const mock = fetchMock
@@ -787,17 +787,13 @@ describe("octokit.config.get", () => {
       },
     });
 
-    try {
-      await octokit.config.get({
-        owner: "octocat",
-        repo: "hello-world",
-        path: ".github/my-app.yaml",
-      });
-    } catch (error: any) {
-      expect(error.message).toMatchInlineSnapshot(
-        `"[@probot/octokit-plugin-config] Configuration could not be parsed from https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yaml (unsafe YAML)"`,
-      );
-    }
+    const response = await octokit.config.get({
+      owner: "octocat",
+      repo: "hello-world",
+      path: ".github/my-app.yaml",
+    });
+
+    expect(response.config.evil).toBe("function () {}");
 
     expect(mock.done()).toBe(true);
   });
