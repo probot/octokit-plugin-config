@@ -24,14 +24,14 @@
     "@octokit/tsconfig": "^4.0.0",
     "@types/js-yaml": "^4.0.5",
     "@types/node": "^20.0.0",
-    "@vitest/coverage-v8": "^3.0.0",
+    "@vitest/coverage-v8": "^4.0.0",
     "esbuild": "^0.25.0",
     "fetch-mock": "^10.0.0",
     "prettier": "^3.0.0",
     "semantic-release-plugin-update-version-in-files": "^2.0.0",
     "strip-indent": "^4.0.0",
     "typescript": "^5.0.0",
-    "vitest": "^3.0.0"
+    "vitest": "^4.0.0"
   },
   "peerDependencies": {
     "@octokit/core": ">=7"
