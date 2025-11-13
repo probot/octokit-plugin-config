@@ -8,16 +8,14 @@ const TestOctokit = Octokit.plugin(config);
 
 describe("issues", () => {
   it("#91 sets incorrect accept header when media type previews are set", async () => {
-    const mock = fetchMock.sandbox().getOnce((_url, { headers }) => {
-      // @ts-ignore TypeScript says we can't do this but turns out we can so there you go
-      expect(headers["accept"]).toEqual("application/vnd.github.v3.raw");
-      return true;
-    }, "foo: bar");
+    const mock = fetchMock.mockGlobal().getOnce({
+      headers: {
+        accept: "application/vnd.github.v3.raw",
+      },
+      response: "foo: bar",
+    });
     const octokit = new TestOctokit({
       previews: ["luke-cage"],
-      request: {
-        fetch: mock,
-      },
     });
 
     await octokit.config.get({
@@ -26,6 +24,6 @@ describe("issues", () => {
       path: "config.yaml",
     });
 
-    expect(mock.done()).toBe(true);
+    fetchMock.unmockGlobal();
   });
 });

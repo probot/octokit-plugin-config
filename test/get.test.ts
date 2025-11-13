@@ -33,7 +33,7 @@ const deepMergeSettings = (
 describe("octokit.config.get", () => {
   it("README simple usage example", async () => {
     const mock = fetchMock
-      .sandbox()
+      .mockGlobal()
       .getOnce(
         "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
         `comment: 'Thank you for creating the issue!'`,
@@ -43,11 +43,7 @@ describe("octokit.config.get", () => {
           },
         },
       );
-    const octokit = new TestOctokit({
-      request: {
-        fetch: mock,
-      },
-    });
+    const octokit = new TestOctokit();
 
     const result = await octokit.config.get({
       owner: "octocat",
@@ -56,12 +52,12 @@ describe("octokit.config.get", () => {
     });
 
     expect(result).toMatchSnapshot("result");
-    expect(mock.done()).toBe(true);
+    fetchMock.unmockGlobal();
   });
 
   it("config file missing", async () => {
     const mock = fetchMock
-      .sandbox()
+      .mockGlobal()
       .getOnce(
         "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
         NOT_FOUND_RESPONSE,
@@ -71,11 +67,7 @@ describe("octokit.config.get", () => {
         NOT_FOUND_RESPONSE,
       );
 
-    const octokit = new TestOctokit({
-      request: {
-        fetch: mock,
-      },
-    });
+    const octokit = new TestOctokit();
 
     const result = await octokit.config.get({
       owner: "octocat",
@@ -87,12 +79,12 @@ describe("octokit.config.get", () => {
     });
 
     expect(result).toMatchSnapshot("result");
-    expect(mock.done()).toBe(true);
+    fetchMock.unmockGlobal();
   });
 
   it("returns defaults option when no config files exist", async () => {
     const mock = fetchMock
-      .sandbox()
+      .mockGlobal()
       .getOnce(
         "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
         NOT_FOUND_RESPONSE,
@@ -102,11 +94,7 @@ describe("octokit.config.get", () => {
         NOT_FOUND_RESPONSE,
       );
 
-    const octokit = new TestOctokit({
-      request: {
-        fetch: mock,
-      },
-    });
+    const octokit = new TestOctokit();
 
     const result = await octokit.config.get({
       owner: "octocat",
@@ -118,22 +106,18 @@ describe("octokit.config.get", () => {
     });
 
     expect(result).toMatchSnapshot("result");
-    expect(mock.done()).toBe(true);
+    fetchMock.unmockGlobal();
   });
 
   it("merges defaults option", async () => {
     const mock = fetchMock
-      .sandbox()
+      .mockGlobal()
       .getOnce(
         "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
         `config: 'value from .github/my-app.yml'`,
       );
 
-    const octokit = new TestOctokit({
-      request: {
-        fetch: mock,
-      },
-    });
+    const octokit = new TestOctokit();
 
     const result = await octokit.config.get({
       owner: "octocat",
@@ -146,12 +130,12 @@ describe("octokit.config.get", () => {
     });
 
     expect(result).toMatchSnapshot("result");
-    expect(mock.done()).toBe(true);
+    fetchMock.unmockGlobal();
   });
 
   it("merges defaults option from .github repository", async () => {
     const mock = fetchMock
-      .sandbox()
+      .mockGlobal()
       .getOnce(
         "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
         NOT_FOUND_RESPONSE,
@@ -161,11 +145,7 @@ describe("octokit.config.get", () => {
         `config: 'value from octocat/.github:.github/my-app.yml'`,
       );
 
-    const octokit = new TestOctokit({
-      request: {
-        fetch: mock,
-      },
-    });
+    const octokit = new TestOctokit();
 
     const result = await octokit.config.get({
       owner: "octocat",
@@ -178,12 +158,12 @@ describe("octokit.config.get", () => {
     });
 
     expect(result).toMatchSnapshot("result");
-    expect(mock.done()).toBe(true);
+    fetchMock.unmockGlobal();
   });
 
   it("resolves _extends in .github repository file", async () => {
     const mock = fetchMock
-      .sandbox()
+      .mockGlobal()
       .getOnce(
         "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
         NOT_FOUND_RESPONSE,
@@ -203,11 +183,7 @@ describe("octokit.config.get", () => {
         `otherConfig: 'value from octocat/hello-world:.github/my-third-app.yml'`,
       );
 
-    const octokit = new TestOctokit({
-      request: {
-        fetch: mock,
-      },
-    });
+    const octokit = new TestOctokit();
 
     const result = await octokit.config.get({
       owner: "octocat",
@@ -220,11 +196,11 @@ describe("octokit.config.get", () => {
     });
 
     expect(result).toMatchSnapshot("result");
-    expect(mock.done()).toBe(true);
+    fetchMock.unmockGlobal();
   });
 
   it("merges deeply using defaults function", async () => {
-    const mock = fetchMock.sandbox().getOnce(
+    const mock = fetchMock.mockGlobal().getOnce(
       "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
       stripIndent(`
           settings:
@@ -232,11 +208,7 @@ describe("octokit.config.get", () => {
           otherSetting1: value from config file`),
     );
 
-    const octokit = new TestOctokit({
-      request: {
-        fetch: mock,
-      },
-    });
+    const octokit = new TestOctokit();
 
     const defaults = {
       settings: {
@@ -254,12 +226,12 @@ describe("octokit.config.get", () => {
     });
 
     expect(result).toMatchSnapshot("result");
-    expect(mock.done()).toBe(true);
+    fetchMock.unmockGlobal();
   });
 
   it("branch option", async () => {
     const mock = fetchMock
-      .sandbox()
+      .mockGlobal()
       .getOnce(
         "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml?ref=my-branch",
         `comment: 'Thank you for creating the issue!'`,
@@ -269,11 +241,7 @@ describe("octokit.config.get", () => {
           },
         },
       );
-    const octokit = new TestOctokit({
-      request: {
-        fetch: mock,
-      },
-    });
+    const octokit = new TestOctokit();
 
     const result = await octokit.config.get({
       owner: "octocat",
@@ -283,12 +251,12 @@ describe("octokit.config.get", () => {
     });
 
     expect(result).toMatchSnapshot("result");
-    expect(mock.done()).toBe(true);
+    fetchMock.unmockGlobal();
   });
 
   it("_extends: base", async () => {
     const mock = fetchMock
-      .sandbox()
+      .mockGlobal()
       .getOnce(
         "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
         stripIndent(`
@@ -302,11 +270,7 @@ describe("octokit.config.get", () => {
         setting2: value from base config file`),
       );
 
-    const octokit = new TestOctokit({
-      request: {
-        fetch: mock,
-      },
-    });
+    const octokit = new TestOctokit();
     const result = await octokit.config.get({
       owner: "octocat",
       repo: "hello-world",
@@ -314,12 +278,12 @@ describe("octokit.config.get", () => {
     });
 
     expect(result).toMatchSnapshot("result");
-    expect(mock.done()).toBe(true);
+    fetchMock.unmockGlobal();
   });
 
   it("_extends: base -> _extends: base2", async () => {
     const mock = fetchMock
-      .sandbox()
+      .mockGlobal()
       .getOnce(
         "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
         stripIndent(`
@@ -341,11 +305,7 @@ describe("octokit.config.get", () => {
         setting3: value from base2 config file`),
       );
 
-    const octokit = new TestOctokit({
-      request: {
-        fetch: mock,
-      },
-    });
+    const octokit = new TestOctokit();
     const result = await octokit.config.get({
       owner: "octocat",
       repo: "hello-world",
@@ -353,12 +313,12 @@ describe("octokit.config.get", () => {
     });
 
     expect(result).toMatchSnapshot("result");
-    expect(mock.done()).toBe(true);
+    fetchMock.unmockGlobal();
   });
 
   it("_extends: base with defaults and custom merge", async () => {
     const mock = fetchMock
-      .sandbox()
+      .mockGlobal()
       .getOnce(
         "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
         stripIndent(`
@@ -377,11 +337,7 @@ describe("octokit.config.get", () => {
         otherSetting2: value from base config file`),
       );
 
-    const octokit = new TestOctokit({
-      request: {
-        fetch: mock,
-      },
-    });
+    const octokit = new TestOctokit();
     const defaults = {
       settings: {
         one: "default value",
@@ -400,14 +356,14 @@ describe("octokit.config.get", () => {
     });
 
     expect(result).toMatchSnapshot("result");
-    expect(mock.done()).toBe(true);
+    fetchMock.unmockGlobal();
   });
 
   it("config file is a submodule", async () => {
-    expect.assertions(2);
+    expect.assertions(1);
 
     const mock = fetchMock
-      .sandbox()
+      .mockGlobal()
       .getOnce(
         "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
         {
@@ -418,11 +374,7 @@ describe("octokit.config.get", () => {
         },
       );
 
-    const octokit = new TestOctokit({
-      request: {
-        fetch: mock,
-      },
-    });
+    const octokit = new TestOctokit();
 
     try {
       await octokit.config.get({
@@ -436,22 +388,18 @@ describe("octokit.config.get", () => {
       );
     }
 
-    expect(mock.done()).toBe(true);
+    fetchMock.unmockGlobal();
   });
 
   it("config file is empty", async () => {
     const mock = fetchMock
-      .sandbox()
+      .mockGlobal()
       .getOnce(
         "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
         "",
       );
 
-    const octokit = new TestOctokit({
-      request: {
-        fetch: mock,
-      },
-    });
+    const octokit = new TestOctokit();
 
     const result = await octokit.config.get({
       owner: "octocat",
@@ -460,22 +408,18 @@ describe("octokit.config.get", () => {
     });
 
     expect(result).toMatchSnapshot("result");
-    expect(mock.done()).toBe(true);
+    fetchMock.unmockGlobal();
   });
 
   it("repo is .github", async () => {
     const mock = fetchMock
-      .sandbox()
+      .mockGlobal()
       .getOnce(
         "https://api.github.com/repos/octocat/.github/contents/.github%2Fmy-app.yml",
         NOT_FOUND_RESPONSE,
       );
 
-    const octokit = new TestOctokit({
-      request: {
-        fetch: mock,
-      },
-    });
+    const octokit = new TestOctokit();
 
     const result = await octokit.config.get({
       owner: "octocat",
@@ -484,12 +428,12 @@ describe("octokit.config.get", () => {
     });
 
     expect(result).toMatchSnapshot("result");
-    expect(mock.done()).toBe(true);
+    fetchMock.unmockGlobal();
   });
 
   it("_extends file is missing", async () => {
     const mock = fetchMock
-      .sandbox()
+      .mockGlobal()
       .getOnce(
         "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
         stripIndent(`
@@ -501,11 +445,7 @@ describe("octokit.config.get", () => {
         NOT_FOUND_RESPONSE,
       );
 
-    const octokit = new TestOctokit({
-      request: {
-        fetch: mock,
-      },
-    });
+    const octokit = new TestOctokit();
     const result = await octokit.config.get({
       owner: "octocat",
       repo: "hello-world",
@@ -513,14 +453,14 @@ describe("octokit.config.get", () => {
     });
 
     expect(result).toMatchSnapshot("result");
-    expect(mock.done()).toBe(true);
+    fetchMock.unmockGlobal();
   });
 
   it("request error", async () => {
-    expect.assertions(2);
+    expect.assertions(1);
 
     const mock = fetchMock
-      .sandbox()
+      .mockGlobal()
       .getOnce(
         "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
         {
@@ -528,11 +468,7 @@ describe("octokit.config.get", () => {
         },
       );
 
-    const octokit = new TestOctokit({
-      request: {
-        fetch: mock,
-      },
-    });
+    const octokit = new TestOctokit();
 
     try {
       await octokit.config.get({
@@ -544,14 +480,14 @@ describe("octokit.config.get", () => {
       expect(error.status).toEqual(500);
     }
 
-    expect(mock.done()).toBe(true);
+    fetchMock.unmockGlobal();
   });
 
   it("recursion", async () => {
-    expect.assertions(2);
+    expect.assertions(1);
 
     const mock = fetchMock
-      .sandbox()
+      .mockGlobal()
       .getOnce(
         "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
         stripIndent(`
@@ -571,11 +507,7 @@ describe("octokit.config.get", () => {
         _extends: hello-world`),
       );
 
-    const octokit = new TestOctokit({
-      request: {
-        fetch: mock,
-      },
-    });
+    const octokit = new TestOctokit();
     try {
       await octokit.config.get({
         owner: "octocat",
@@ -588,12 +520,12 @@ describe("octokit.config.get", () => {
       );
     }
 
-    expect(mock.done()).toBe(true);
+    fetchMock.unmockGlobal();
   });
 
   it(".yaml extension", async () => {
     const mock = fetchMock
-      .sandbox()
+      .mockGlobal()
       .getOnce(
         "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yaml",
         `comment: 'Thank you for creating the issue!'`,
@@ -603,11 +535,7 @@ describe("octokit.config.get", () => {
           },
         },
       );
-    const octokit = new TestOctokit({
-      request: {
-        fetch: mock,
-      },
-    });
+    const octokit = new TestOctokit();
 
     const result = await octokit.config.get({
       owner: "octocat",
@@ -616,11 +544,11 @@ describe("octokit.config.get", () => {
     });
 
     expect(result).toMatchSnapshot("result");
-    expect(mock.done()).toBe(true);
+    fetchMock.unmockGlobal();
   });
 
   it(".json extension", async () => {
-    const mock = fetchMock.sandbox().getOnce(
+    const mock = fetchMock.mockGlobal().getOnce(
       "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.json",
       { comment: "Thank you for creating the issue!" },
       {
@@ -629,11 +557,7 @@ describe("octokit.config.get", () => {
         },
       },
     );
-    const octokit = new TestOctokit({
-      request: {
-        fetch: mock,
-      },
-    });
+    const octokit = new TestOctokit();
 
     const result = await octokit.config.get({
       owner: "octocat",
@@ -642,7 +566,7 @@ describe("octokit.config.get", () => {
     });
 
     expect(result).toMatchSnapshot("result");
-    expect(mock.done()).toBe(true);
+    fetchMock.unmockGlobal();
   });
 
   it(".unknown extension", async () => {
@@ -664,10 +588,10 @@ describe("octokit.config.get", () => {
   });
 
   it("malformed json", async () => {
-    expect.assertions(2);
+    expect.assertions(1);
 
     const mock = fetchMock
-      .sandbox()
+      .mockGlobal()
       .getOnce(
         "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.json",
         "malformed json",
@@ -677,11 +601,7 @@ describe("octokit.config.get", () => {
           },
         },
       );
-    const octokit = new TestOctokit({
-      request: {
-        fetch: mock,
-      },
-    });
+    const octokit = new TestOctokit();
 
     try {
       await octokit.config.get({
@@ -695,14 +615,14 @@ describe("octokit.config.get", () => {
       );
     }
 
-    expect(mock.done()).toBe(true);
+    fetchMock.unmockGlobal();
   });
 
   it("malformed yaml", async () => {
-    expect.assertions(2);
+    expect.assertions(1);
 
     const mock = fetchMock
-      .sandbox()
+      .mockGlobal()
       .getOnce(
         "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yaml",
         "malformed yaml",
@@ -712,11 +632,7 @@ describe("octokit.config.get", () => {
           },
         },
       );
-    const octokit = new TestOctokit({
-      request: {
-        fetch: mock,
-      },
-    });
+    const octokit = new TestOctokit();
 
     try {
       await octokit.config.get({
@@ -730,14 +646,14 @@ describe("octokit.config.get", () => {
       );
     }
 
-    expect(mock.done()).toBe(true);
+    fetchMock.unmockGlobal();
   });
 
   it("malformed yaml: @", async () => {
-    expect.assertions(2);
+    expect.assertions(1);
 
     const mock = fetchMock
-      .sandbox()
+      .mockGlobal()
       .getOnce(
         "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yaml",
         "@",
@@ -747,11 +663,7 @@ describe("octokit.config.get", () => {
           },
         },
       );
-    const octokit = new TestOctokit({
-      request: {
-        fetch: mock,
-      },
-    });
+    const octokit = new TestOctokit();
 
     try {
       await octokit.config.get({
@@ -765,13 +677,13 @@ describe("octokit.config.get", () => {
       );
     }
 
-    expect(mock.done()).toBe(true);
+    fetchMock.unmockGlobal();
   });
   it("unsafe yaml", async () => {
-    expect.assertions(2);
+    expect.assertions(1);
 
     const mock = fetchMock
-      .sandbox()
+      .mockGlobal()
       .getOnce(
         "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yaml",
         'evil: !<tag:yaml.org,2002:js/function> "function () {}"',
@@ -781,11 +693,7 @@ describe("octokit.config.get", () => {
           },
         },
       );
-    const octokit = new TestOctokit({
-      request: {
-        fetch: mock,
-      },
-    });
+    const octokit = new TestOctokit();
 
     try {
       await octokit.config.get({
@@ -799,12 +707,12 @@ describe("octokit.config.get", () => {
       );
     }
 
-    expect(mock.done()).toBe(true);
+    fetchMock.unmockGlobal();
   });
 
   it("_extends: other-owner/base", async () => {
     const mock = fetchMock
-      .sandbox()
+      .mockGlobal()
       .getOnce(
         "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
         stripIndent(`
@@ -820,11 +728,7 @@ describe("octokit.config.get", () => {
       `),
       );
 
-    const octokit = new TestOctokit({
-      request: {
-        fetch: mock,
-      },
-    });
+    const octokit = new TestOctokit();
     const result = await octokit.config.get({
       owner: "octocat",
       repo: "hello-world",
@@ -832,12 +736,12 @@ describe("octokit.config.get", () => {
     });
 
     expect(result).toMatchSnapshot("result");
-    expect(mock.done()).toBe(true);
+    fetchMock.unmockGlobal();
   });
 
   it("_extends: base:test.yml", async () => {
     const mock = fetchMock
-      .sandbox()
+      .mockGlobal()
       .getOnce(
         "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
         stripIndent(`
@@ -853,11 +757,7 @@ describe("octokit.config.get", () => {
       `),
       );
 
-    const octokit = new TestOctokit({
-      request: {
-        fetch: mock,
-      },
-    });
+    const octokit = new TestOctokit();
     const result = await octokit.config.get({
       owner: "octocat",
       repo: "hello-world",
@@ -865,12 +765,12 @@ describe("octokit.config.get", () => {
     });
 
     expect(result).toMatchSnapshot("result");
-    expect(mock.done()).toBe(true);
+    fetchMock.unmockGlobal();
   });
 
   it("_extends: other-owner/base:test.yml", async () => {
     const mock = fetchMock
-      .sandbox()
+      .mockGlobal()
       .getOnce(
         "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
         stripIndent(`
@@ -886,11 +786,7 @@ describe("octokit.config.get", () => {
       `),
       );
 
-    const octokit = new TestOctokit({
-      request: {
-        fetch: mock,
-      },
-    });
+    const octokit = new TestOctokit();
     const result = await octokit.config.get({
       owner: "octocat",
       repo: "hello-world",
@@ -898,13 +794,13 @@ describe("octokit.config.get", () => {
     });
 
     expect(result).toMatchSnapshot("result");
-    expect(mock.done()).toBe(true);
+    fetchMock.unmockGlobal();
   });
 
   it("_extends: invalid!", async () => {
-    expect.assertions(2);
+    expect.assertions(1);
 
-    const mock = fetchMock.sandbox().getOnce(
+    const mock = fetchMock.mockGlobal().getOnce(
       "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
       stripIndent(`
         setting1: value from repo config file
@@ -912,11 +808,7 @@ describe("octokit.config.get", () => {
       `),
     );
 
-    const octokit = new TestOctokit({
-      request: {
-        fetch: mock,
-      },
-    });
+    const octokit = new TestOctokit();
 
     try {
       await octokit.config.get({
@@ -930,13 +822,13 @@ describe("octokit.config.get", () => {
       );
     }
 
-    expect(mock.done()).toBe(true);
+    fetchMock.unmockGlobal();
   });
 
   it("_extends: { nope }", async () => {
-    expect.assertions(2);
+    expect.assertions(1);
 
-    const mock = fetchMock.sandbox().getOnce(
+    const mock = fetchMock.mockGlobal().getOnce(
       "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
       stripIndent(`
         setting1: value from repo config file
@@ -944,11 +836,7 @@ describe("octokit.config.get", () => {
       `),
     );
 
-    const octokit = new TestOctokit({
-      request: {
-        fetch: mock,
-      },
-    });
+    const octokit = new TestOctokit();
 
     try {
       await octokit.config.get({
@@ -962,6 +850,6 @@ describe("octokit.config.get", () => {
       );
     }
 
-    expect(mock.done()).toBe(true);
+    fetchMock.unmockGlobal();
   });
 });
