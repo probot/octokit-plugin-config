@@ -695,17 +695,13 @@ describe("octokit.config.get", () => {
       );
     const octokit = new TestOctokit();
 
-    try {
-      await octokit.config.get({
-        owner: "octocat",
-        repo: "hello-world",
-        path: ".github/my-app.yaml",
-      });
-    } catch (error: any) {
-      expect(error.message).toMatchInlineSnapshot(
-        `"[@probot/octokit-plugin-config] Configuration could not be parsed from https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yaml (unsafe YAML)"`,
-      );
-    }
+    const response = await octokit.config.get({
+      owner: "octocat",
+      repo: "hello-world",
+      path: ".github/my-app.yaml",
+    });
+
+    expect(response.config.evil).toBe("function () {}");
 
     fetchMock.unmockGlobal();
   });

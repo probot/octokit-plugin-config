@@ -1,5 +1,6 @@
 import type { Octokit } from "@octokit/core";
-import yaml from "js-yaml";
+import type { ResponseHeaders } from "@octokit/types";
+import yaml from "yaml";
 
 import type { Configuration, ConfigFile } from "../types.js";
 
@@ -52,63 +53,63 @@ export async function getConfigFile(
     config: null,
   };
 
+  let data, headers: ResponseHeaders;
   try {
-    const { data, headers } = await octokit.request(endpoint);
-
-    // If path is a submodule, or a folder, then a JSON string is returned with
-    // the "Content-Type" header set to "application/json; charset=utf-8".
-    //
-    // - https://docs.github.com/en/rest/reference/repos#if-the-content-is-a-submodule
-    // - https://docs.github.com/en/rest/reference/repos#if-the-content-is-a-directory
-    //
-    // symlinks just return the content of the linked file when requesting the raw formt,
-    // so we are fine
-    if (headers["content-type"] === "application/json; charset=utf-8") {
-      throw new Error(
-        `[@probot/octokit-plugin-config] ${url} exists, but is either a directory or a submodule. Ignoring.`,
-      );
+    const response = await octokit.request(endpoint);
+    data = response.data;
+    headers = response.headers as ResponseHeaders;
+  } catch (error: any) {
+    if (error.status === 404) {
+      return emptyConfigResult;
     }
+    throw error;
+  }
 
-    if (fileExtension === "json") {
-      if (typeof data === "string") {
-        throw new Error(
-          `[@probot/octokit-plugin-config] Configuration could not be parsed from ${url} (invalid JSON)`,
-        );
-      }
+  // If path is a submodule, or a folder, then a JSON string is returned with
+  // the "Content-Type" header set to "application/json; charset=utf-8".
+  //
+  // - https://docs.github.com/en/rest/reference/repos#if-the-content-is-a-submodule
+  // - https://docs.github.com/en/rest/reference/repos#if-the-content-is-a-directory
+  //
+  // symlinks just return the content of the linked file when requesting the raw formt,
+  // so we are fine
+  if (headers["content-type"] === "application/json; charset=utf-8") {
+    throw new Error(
+      `[@probot/octokit-plugin-config] ${url} exists, but is either a directory or a submodule. Ignoring.`,
+    );
+  }
 
-      return {
-        ...emptyConfigResult,
-        config: data,
-      };
-    }
-
-    const config = (yaml.load(data) || {}) as unknown as Configuration;
-
-    if (typeof config === "string") {
+  if (fileExtension === "json") {
+    if (typeof data === "string") {
       throw new Error(
-        `[@probot/octokit-plugin-config] Configuration could not be parsed from ${url} (YAML is not an object)`,
+        `[@probot/octokit-plugin-config] Configuration could not be parsed from ${url} (invalid JSON)`,
       );
     }
 
     return {
       ...emptyConfigResult,
-      config,
+      config: data,
     };
-  } catch (error: any) {
-    if (error.status === 404) {
-      return emptyConfigResult;
-    }
-
-    if (error.name === "YAMLException") {
-      const reason = /unknown tag/.test(error.message)
-        ? "unsafe YAML"
-        : "invalid YAML";
-
-      throw new Error(
-        `[@probot/octokit-plugin-config] Configuration could not be parsed from ${url} (${reason})`,
-      );
-    }
-
-    throw error;
   }
+
+  let config: Configuration;
+  try {
+    config = (yaml.parse(data, { logLevel: "error" }) ||
+      {}) as unknown as Configuration;
+  } catch (error: any) {
+    throw new Error(
+      `[@probot/octokit-plugin-config] Configuration could not be parsed from ${url} (invalid YAML)`,
+      { cause: error },
+    );
+  }
+  if (typeof config === "string") {
+    throw new Error(
+      `[@probot/octokit-plugin-config] Configuration could not be parsed from ${url} (YAML is not an object)`,
+    );
+  }
+
+  return {
+    ...emptyConfigResult,
+    config,
+  };
 }
