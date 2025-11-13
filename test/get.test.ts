@@ -109,7 +109,7 @@ describe("octokit.config.get", () => {
     fetchMock.unmockGlobal();
   });
 
-  it("if fetch returns status as a string when no files exist", async () => {
+  it("if fetch returns a response with a status as a string when no files exist", async () => {
     const mock = fetchMock
       .mockGlobal()
       .getOnce(
