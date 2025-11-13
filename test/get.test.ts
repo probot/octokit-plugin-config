@@ -109,6 +109,33 @@ describe("octokit.config.get", () => {
     fetchMock.unmockGlobal();
   });
 
+  it("if fetch returns status as a string when no files exist", async () => {
+    const mock = fetchMock
+      .mockGlobal()
+      .getOnce(
+        "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
+        { ...NOT_FOUND_RESPONSE, status: "404" },
+      )
+      .getOnce(
+        "https://api.github.com/repos/octocat/.github/contents/.github%2Fmy-app.yml",
+        { ...NOT_FOUND_RESPONSE, status: "404" },
+      );
+
+    const octokit = new TestOctokit();
+
+    const result = await octokit.config.get({
+      owner: "octocat",
+      repo: "hello-world",
+      path: ".github/my-app.yml",
+      defaults: {
+        comment: "Thank you for creating the issue!",
+      },
+    });
+
+    expect(result).toMatchSnapshot("result");
+    fetchMock.unmockGlobal();
+  });
+
   it("merges defaults option", async () => {
     const mock = fetchMock
       .mockGlobal()

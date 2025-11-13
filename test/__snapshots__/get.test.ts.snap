@@ -346,6 +346,30 @@ exports[`octokit.config.get > config file missing > result 1`] = `
 }
 `;
 
+exports[`octokit.config.get > if fetch returns status as a string when no files exist > result 1`] = `
+{
+  "config": {
+    "comment": "Thank you for creating the issue!",
+  },
+  "files": [
+    {
+      "config": null,
+      "owner": "octocat",
+      "path": ".github/my-app.yml",
+      "repo": "hello-world",
+      "url": "https://api.github.com/repos/octocat/hello-world/contents/.github%2Fmy-app.yml",
+    },
+    {
+      "config": null,
+      "owner": "octocat",
+      "path": ".github/my-app.yml",
+      "repo": ".github",
+      "url": "https://api.github.com/repos/octocat/.github/contents/.github%2Fmy-app.yml",
+    },
+  ],
+}
+`;
+
 exports[`octokit.config.get > merges deeply using defaults function > result 1`] = `
 {
   "config": {

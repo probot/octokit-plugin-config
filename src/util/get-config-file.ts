@@ -59,7 +59,7 @@ export async function getConfigFile(
     data = response.data;
     headers = response.headers as ResponseHeaders;
   } catch (error: any) {
-    if (error.status === 404) {
+    if (+error.status === 404) {
       return emptyConfigResult;
     }
     throw error;
