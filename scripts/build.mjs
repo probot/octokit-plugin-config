@@ -6,7 +6,7 @@ import { copyFile, readFile, writeFile, rm } from "fs/promises";
  * @type {esbuild.BuildOptions}
  */
 const sharedOptions = {
-  sourcemap: "external",
+  sourcemap: false,
   sourcesContent: true,
   minify: false,
   allowOverwrite: true,
